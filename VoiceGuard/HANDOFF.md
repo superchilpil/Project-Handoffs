@@ -1,60 +1,150 @@
 # VoiceGuard Project Handoff
 
-## Repository
-- https://github.com/superchilpil/VoiceGuard
+## Canonical repositories / identity
+- Main project: https://github.com/superchilpil/VoiceGuard
 - Branch: main
-- Known release: 6.7.6
+- Publisher/branding: Jack The Gooner
+- Known release at time of this handoff: 6.7.6
+- Central handoff repository: https://github.com/superchilpil/Project-Handoffs
 
-## Purpose
-Windows C#/.NET voice-chat profanity filter using delayed microphone capture, Whisper speech recognition, and configurable censorship/replacement audio.
+## Project purpose
+VoiceGuard is a Windows desktop profanity filter for voice chat. It captures microphone audio, delays transmission, uses Whisper speech recognition to detect configured words/phrases, and censors offending sections with silence or user-defined replacement audio. It is intended to sit between the user's microphone/game PTT workflow and a virtual microphone such as Voicemeeter/VB-Cable.
 
-## Core behavior
-- Idle: live microphone passthrough.
-- Hold VoiceGuard trigger: private delayed capture/filtering.
-- Release trigger: drain delayed queue, release game PTT, return to live passthrough.
-- Normal game PTT remains an unfiltered bypass while VoiceGuard is idle.
-- Direct bypass is unavailable while filtering/draining.
-- Designed for virtual-mic routing such as Voicemeeter/VB-Cable.
+## Fundamental operating model
+- Idle state = live microphone passthrough.
+- Holding the separate VoiceGuard trigger starts private delayed capture/filtering.
+- Releasing the VoiceGuard trigger drains the delayed queue, releases the game PTT, and returns to live passthrough.
+- The normal game PTT key is intentionally left untouched so it can provide a direct, unfiltered bypass when the VoiceGuard engine is idle.
+- Direct bypass is not available while VoiceGuard is actively filtering or draining.
+- VoiceGuard should censor speech, not soundboard audio.
+- User wants the audio pipeline to preserve the intended timing rather than cutting off audio immediately when PTT is released.
 
-## Recognition
-- Whisper.net; Whisper small.en has been used.
-- Rolling recognition has used 1.0s windows / 0.5s steps.
-- Timing/lag is an ongoing tuning area.
-- Filter speech, not unrelated soundboard playback.
+## Speech recognition / Whisper
+- Uses Whisper.net.
+- Whisper small.en has been used as the recognition model.
+- Model download previously discussed as roughly 465 MB.
+- Recognition worker has used rolling windows with Window=1.0s and Step=0.5s.
+- Recognition lag/detection timing has been a recurring tuning issue.
+- Previous logs showed cases where recognition happened only once or required another PTT press; timing/window behavior has therefore been important.
+- User uses transcription aliases to compensate for Whisper misrecognitions.
+- Example previously configured alias: "bag it" -> "faggot".
+- Diagnostics/logging include timestamps, recognition output, aliases, confidence/timing information where available.
 
-## Soundboard
-- Local headset playback is synchronized to configured VoiceGuard delay.
-- Soundboard PTT remains held through complete delayed transmission.
-- Soundboard is inserted into the delayed timeline rather than playing immediately.
+## Audio / soundboard behavior
+- Local headset soundboard playback is synchronized to the configured VoiceGuard delay instead of starting immediately.
+- Current implementation starts local playback using approximately currentEngine.DelaySeconds + 0.020 seconds.
+- Soundboard audio is represented in the delayed timeline rather than bypassing the delay.
+- Soundboard PTT remains held for the complete delayed transmission.
+- User explicitly wants local and transmitted soundboard audio to start in sync.
+- Replacement/censor sounds are part of the delayed output path.
+- User previously wanted a standalone VoiceGuard-specific audio converter that converts common audio formats to WAV without changing/breaking VoiceGuard.
 
-## UI / overlay
-- Purple title bar; show only version number, not Stage.
-- Keep Minimize to system tray visible.
-- Overlay only when VoiceGuard is started.
-- Eight positions: four corners plus four side-center positions.
-- Text and circular LED modes.
-- LED: green=live, red=filtering/analyzing/draining, purple=soundboard, yellow=direct bypass, gray=stopped.
-- LED target: circular solid center with radial fade to transparent edges; avoid magenta fringe/pie fill.
-- Latest LED tuning reduced size to about 75% and increased transparency.
+## UI / branding
+- Purple title bar.
+- Do not show "Stage"; title/version should show only the version number.
+- Keep "Minimize to system tray" visible.
+- Header includes an always-visible "Check for updates" button.
+- User prefers practical UI changes without unrelated redesign.
+- A lower-left logo was repeatedly considered too large; latest requested direction was to reduce it to roughly 75% of its previous size.
 
-## Updater
-- Persistent Check for updates button.
-- Startup check for newer GitHub release.
-- Newer release changes button to Update to X.Y.Z.
-- Downloads matching VoiceGuard_Setup_X.Y.Z.exe, stops engine, launches installer elevated, exits app.
-- Possible legacy-install edge case: may need installer launched with /DIR="<AppContext.BaseDirectory>".
+## Status overlay
+- Overlay is shown only when VoiceGuard is started.
+- Settings allow enable/disable and position.
+- Eight positions: four corners and the middle of each side.
+- Supports text or LED status.
+- LED status meanings:
+  - Green = live microphone passthrough
+  - Red = filtering / analyzing / draining
+  - Purple = soundboard playback
+  - Yellow = direct PTT bypass
+  - Gray = stopped/inactive
+- Desired LED shape is circular, with a solid center fading radially to transparent edges.
+- Avoid pie-shaped fills and purple/magenta fringe/rims.
+- Latest visual tuning reduced LED size to about 75% of the previous size and increased transparency.
+- The overlay's purpose is status feedback, not decorative animation.
 
-## Build / release
-- .NET 8 WinForms, net8.0-windows, x64, win-x64, self-contained.
-- PublishSingleFile=false, PublishTrimmed=false.
-- NAudio 2.2.1; Whisper.net 1.9.1 and related runtime packages.
-- BUILD_INSTALLER.bat publishes, verifies VoiceGuard.exe and Whisper native DLLs, then runs Inno Setup.
-- .github/workflows/windows-installer.yml supports manual release_version and draft_release inputs.
-- RELEASE_NOTES.md is the persistent user-facing release-note source and should be updated for significant release-worthy changes.
+## In-app updater
+- MainForm contains a persistent "Check for updates" button.
+- VoiceGuard checks GitHub's latest-release API at startup.
+- If a newer release exists, the button changes to "Update to X.Y.Z".
+- Updater downloads the matching installer asset named like VoiceGuard_Setup_X.Y.Z.exe to a temporary folder.
+- It validates that the installer exists and is reasonably sized, stops the engine if active, launches the installer elevated, then exits VoiceGuard.
+- Updater-related implementation was recently changed around commit d7facbf6456502f69071ab9ce557fbe8548bd12f.
+- Potential legacy-install edge case: older installs may live in versioned directories. If an updater downloads/launches the installer but fails to replace the existing application, investigate launching the installer with /DIR="<AppContext.BaseDirectory>".
 
-## User preferences
-- Prefer direct edits/fixes.
-- Never claim compile/test/release success unless verified.
-- Include a build script in Windows projects.
-- Keep release notes concise and user-facing.
-- Avoid unrelated redesigns when fixing a specific issue.
+## Build configuration
+- Target framework: net8.0-windows.
+- Windows Forms.
+- x64 / win-x64.
+- Self-contained.
+- PublishSingleFile=false.
+- PublishTrimmed=false.
+- Main packages:
+  - NAudio 2.2.1
+  - Whisper.net 1.9.1
+  - Whisper.net.Runtime 1.9.1
+  - Whisper.net.Runtime.OpenVino 1.9.1
+  - OpenVINO.runtime.win 2024.4.0.1
+- User expects Windows projects to include a one-command build script such as build.bat.
+
+## Installer
+- BUILD_INSTALLER.bat cleans publish/installer, runs dotnet publish, verifies VoiceGuard.exe, verifies Whisper native DLLs, and runs Inno Setup.
+- Expected Whisper native files include:
+  - publish\runtimes\win-x64\whisper.dll
+  - publish\runtimes\win-x64\ggml-whisper.dll
+  - publish\runtimes\win-x64\ggml-base-whisper.dll
+  - publish\runtimes\win-x64\ggml-cpu-whisper.dll
+- VoiceGuard_Installer.iss:
+  - App name VoiceGuard
+  - Publisher Jack The Gooner
+  - Default install directory under Program Files\VoiceGuard
+  - x64/admin
+  - Includes publish directory recursively
+  - Output installer named VoiceGuard_Setup_X.Y.Z.exe
+
+## Automated release workflow
+File: .github/workflows/windows-installer.yml
+- Normal release path is manual workflow_dispatch.
+- release_version input accepts exact MAJOR.MINOR.PATCH, e.g. 6.7.7; blank means automatically increment patch.
+- draft_release boolean creates a GitHub Release as a draft for testing.
+- Workflow updates Version, AssemblyVersion and FileVersion, commits/pushes the version bump, creates/pushes the matching vX.Y.Z tag, builds the Windows installer, uploads the artifact, and creates the GitHub Release.
+- RELEASE_NOTES.md is the persistent source of user-facing release notes.
+- Workflow must fail clearly if RELEASE_NOTES.md is missing.
+- Exact existing tags should not be overwritten.
+- Do not replace user-facing release notes with generic autogenerated changelog text.
+- Important workflow history: fixes included Inno Setup discovery, PowerShell ProgramFiles(x86) parsing, GitHub token authentication, and one-job/tag behavior.
+- Potential future issue: if tag-push triggering causes duplicate/unintended workflow runs, consider using workflow_dispatch as the sole release trigger.
+
+## Release notes
+- RELEASE_NOTES.md should be updated whenever a significant user-visible feature/fix is made.
+- Notes should be concise and user-facing, not generic technical changelog prose.
+- 6.7.6 included:
+  - In-app update checking/updating.
+  - Soundboard timing fix so local headset playback is synchronized with configured VoiceGuard delay.
+- User does not want to have to remind the assistant to update release notes for future release-worthy changes.
+
+## Historical project requirements / ideas
+- VoiceGuard originally centered on a 2–3 second delayed PTT pipeline with Whisper detection.
+- User wanted filtering to apply only to speech and not soundboard audio.
+- User wanted a standalone WAV converter specifically for VoiceGuard.
+- User uses Voicemeeter Banana and wanted VoiceGuard's virtual microphone available for routing.
+- VB-Cable is an acceptable alternative to a custom WDK virtual audio driver.
+- User has specifically avoided requiring WDK for the virtual-mic solution.
+- Previous recognition/debug logs included OS Microsoft Windows NT 10.0.26200.0 and .NET 9 SDK details during earlier development; the current VoiceGuard project baseline is documented above as .NET 8 unless the repository says otherwise.
+- Earlier builds used Whisper/OpenVINO runtime components and had runtime/native-DLL packaging concerns.
+
+## Current known concerns
+- Keep PTT drain/timing behavior intact when changing audio timing.
+- Avoid breaking working soundboard synchronization while modifying the engine.
+- Be careful with updater install-directory behavior for existing installations.
+- Preserve overlay visual requirements and status-color semantics.
+- Verify changes rather than assuming a build succeeded.
+
+## User working preferences
+- Prefer direct implementation/fixes over lengthy explanations.
+- Do not claim compile/test/release success unless actually performed and verified.
+- For GitHub source changes, edit the repository directly when the required tool access exists.
+- Include a build.bat/equivalent in Windows projects.
+- When a fix or feature is release-worthy, update RELEASE_NOTES.md as part of the code change.
+- Preserve existing working behavior when fixing a specific issue.
+- User may manually request a project handoff at any time.
