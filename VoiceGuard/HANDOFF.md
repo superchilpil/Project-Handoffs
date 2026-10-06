@@ -67,7 +67,7 @@ never assume fixed
 tfm=net8.0-windows;WinForms;x64/win-x64;self-contained
 PublishSingleFile=false;PublishTrimmed=false
 packages=NAudio2.2.1;Whisper.net1.9.1;Whisper.net.Runtime1.9.1;Whisper.net.Runtime.OpenVino1.9.1;OpenVINO.runtime.win2024.4.0.1
-build=BUILD_INSTALLER.bat;Windows project=>build.bat/equivalent one-command
+build=BUILD_INSTALLER.bat exists for local/manual convenience only;PRIMARY_BUILD=GitHub_Actions;LOCAL_PC_BUILD=NOT_REQUIRED;Windows project build script is NOT a mandatory requirement
 publish verifies VoiceGuard.exe + runtimes\win-x64\whisper.dll;ggml-whisper.dll;ggml-base-whisper.dll;ggml-cpu-whisper.dll
 installer=VoiceGuard_Installer.iss;ProgramFiles\VoiceGuard;x64/admin;recursive publish;VoiceGuard_Setup_X.Y.Z.exe
 
