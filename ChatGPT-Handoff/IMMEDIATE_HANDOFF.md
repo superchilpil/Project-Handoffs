@@ -11,7 +11,7 @@ The purpose is to transfer as much useful project context as possible from the c
 ---
 
 ## FORMAT / STORAGE
-Handoff files are AI-only continuity data; human readability is not required. Prefer dense shorthand, abbreviations, key=value records, compact lists/tables, and other token-efficient structures when they preserve meaning. Optimize for maximum recoverable context per token, not presentation.
+Handoff files are AI-only continuity data; human readability is not required. Prefer dense shorthand, abbreviations, key=value records, compact lists/tables, and other token-efficient structures when they preserve meaning. Optimize for maximum recoverable context per token, not presentation. Current user decisions override stale handoff text. Explicit negative requirements/exclusions (OUT_OF_SCOPE/DO_NOT_MODIFY/NOT_REQUIRED) must be recorded so rejected goals are never resurrected. Each project handoff must contain enough context for a new ChatGPT instance to infer purpose, architecture, current state, requirements, decisions, exclusions, bugs, failed/rejected approaches, recent work, build/release workflow, user preferences, and next steps without making the user repeat known information. When correcting stale information, supersede/remove the stale statement rather than merely appending a contradiction.
 
 ## Immediate instructions
 
