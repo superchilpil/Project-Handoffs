@@ -153,7 +153,7 @@ root=current includes build.bat,go.mod/go.sum,Taskfile.yml,app.go,main.go,intern
 direct_fix>long_explanation
 verify before claim
 preserve working behavior
-Windows=>build.bat/equivalent
+BUILD_STRATEGY=GitHub_Actions_primary;LOCAL_PC_BUILD=NOT_REQUIRED;build.bat may exist only as optional developer convenience;do not require user to build executables locally
 significant user-visible change=>README/release notes as appropriate
 handoff=manual anytime
 AI-only dense shorthand preferred
