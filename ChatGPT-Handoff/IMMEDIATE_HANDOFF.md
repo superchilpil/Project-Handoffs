@@ -36,15 +36,15 @@ When this file is provided:
    - Important historical context that could affect future implementation
    - What was most recently being worked on
    - Clear next steps
-8. Do **not** invent missing details. If something cannot be recovered, mark it as unknown rather than guessing.
-9. Do not claim that a build, test, release, feature, or fix succeeded unless it was actually verified.
-10. Do not erase historical requirements simply because they are not obvious in the current source.
-11. Do not repeat approaches that the user already rejected unless there is a specific reason to reconsider them.
-12. Preserve working behavior when documenting or continuing a targeted fix.
-13. If the current project handoff already contains information that remains correct, retain it rather than replacing it with a shorter summary.
-14. Add newly discovered information and update stale information where the current conversation/source proves it has changed.
-15. If the project handoff is missing, create it in the appropriate project folder.
-16. After completing the handoff, give the user a concise confirmation stating what handoff file was updated and the commit/change made. Do not claim more than was actually done.
+9. Do **not** invent missing details. If something cannot be recovered, mark it as unknown rather than guessing.
+10. Do not claim that a build, test, release, feature, or fix succeeded unless it was actually verified.
+11. Do not erase historical requirements simply because they are not obvious in the current source.
+12. Do not repeat approaches that the user already rejected unless there is a specific reason to reconsider them.
+13. Preserve working behavior when documenting or continuing a targeted fix.
+14. If the current project handoff already contains information that remains correct, retain it rather than replacing it with a shorter summary.
+15. Add newly discovered information and update stale information where the current conversation/source proves it has changed.
+16. If the project handoff is missing, create it in the appropriate project folder.
+17. After completing the handoff, give the user a concise confirmation stating what handoff file was updated and the commit/change made. Do not claim more than was actually done.
 
 ---
 
