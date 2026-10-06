@@ -1,5 +1,7 @@
 # VoiceGuard Project Handoff
 
+FORMAT=AI_ONLY; HUMAN_READABILITY=NONREQUIRED; DENSE_SHORTHAND_ALLOWED; PRIORITY=MAX_CONTEXT/TOKEN_EFFICIENCY
+
 ## Canonical repositories / identity
 - Main project: https://github.com/superchilpil/VoiceGuard
 - Branch: main
