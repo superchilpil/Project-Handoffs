@@ -10,6 +10,9 @@ The purpose is to transfer as much useful project context as possible from the c
 
 ---
 
+## FORMAT / STORAGE
+Handoff files are AI-only continuity data; human readability is not required. Prefer dense shorthand, abbreviations, key=value records, compact lists/tables, and other token-efficient structures when they preserve meaning. Optimize for maximum recoverable context per token, not presentation.
+
 ## Immediate instructions
 
 When this file is provided:
