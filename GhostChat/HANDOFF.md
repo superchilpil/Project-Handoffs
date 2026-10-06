@@ -86,3 +86,19 @@ This is a major requirement and a known unresolved area.
 
 ## Next-chat starting instructions
 Before making assumptions, inspect the current GitHub repository state because this handoff contains historical context and known requirements, while the repository contains the latest implementation. Treat unresolved issues above as unresolved until verified in the current source.
+
+## Handoff Continuity Instructions
+
+This section is intentionally redundant so a future ChatGPT iteration can recover the handoff workflow even if the surrounding conversation is unavailable.
+
+Treat this file as the project's continuity record. Use it before asking the user to re-explain the project. Combine this historical context with the current GitHub repository/source, because the handoff describes why decisions were made while the repository describes the latest implementation.
+
+When updating or continuing this project:
+- Preserve the requirements, decisions, and working behavior documented here.
+- Treat listed unresolved issues as unresolved until the current source proves otherwise.
+- Do not repeat previously failed or rejected approaches without a clear reason.
+- Never claim code, builds, tests, installers, releases, or features work unless actually verified.
+- Prefer direct implementation/fixes when repository access permits.
+- When a significant feature or fix changes the project state, update this handoff with the new state and any important reasoning.
+- If the user manually asks for a handoff, capture all available project information, not merely a short summary.
+- A complete historical chat transcript may not be available. In that case, preserve every relevant detail available from current conversation context, retained project context, repository history, requirements, decisions, failed attempts, known issues, and user preferences.
