@@ -1,106 +1,164 @@
-# GhostChat Project Handoff
-
+# GhostChat HANDOFF — AI CONTINUITY RECORD
 FORMAT=AI_ONLY; HUMAN_READABILITY=NONREQUIRED; DENSE_SHORTHAND_ALLOWED; PRIORITY=MAX_CONTEXT/TOKEN_EFFICIENCY
+LAST_RECONSTRUCTED=2026-10-05
+IMPORTANT=Historical+intent context; compare current source before claiming implementation state.
 
-## Canonical repositories / identity
-- User fork: https://github.com/superchilpil/ghost-chat
-- User GitHub: superchilpil
-- Central handoff repository: https://github.com/superchilpil/Project-Handoffs
+[IDENTITY]
+repo=https://github.com/superchilpil/ghost-chat
+fork_of=https://github.com/Enubia/ghost-chat
+owner=superchilpil;branch=main;language=Go;framework=Wails_v3
+frontend=React+TypeScript+Zustand+CSS_Modules
+platforms=Windows+macOS
+central_handoff=https://github.com/superchilpil/Project-Handoffs
+purpose=transparent always-on-top desktop chat overlay; unified Twitch+YouTube+Kick
+priority=practical/installable Windows streaming chat overlay
 
-## Project purpose
-GhostChat is a Windows desktop chat/stream utility. The user's goal is a practical installable build with persistent settings, reliable live chat logging, useful OBS integration, and a self-contained build/package workflow.
+[CRITICAL_SCOPE]
+OBS=OUT_OF_SCOPE;NOT_REQUIRED;DO_NOT_MODIFY;NO_DEPENDENCY;NO_FEATURE;NO_README_GOAL;NO_RELEASE_NOTE_ITEM
+GhostChat remains independent of OBS.
+Preserve Twitch/Kick while improving YouTube.
+This explicitly supersedes older handoff text that incorrectly listed OBS as a goal.
 
-## Core user goals
-- Make GhostChat installable on Windows.
-- Make settings persist between launches.
-- Make the application useful alongside OBS and streaming.
-- Provide chat logs that can be referenced while a stream is still running.
-- Keep the build process simple enough to use with a build.bat/one-command script.
-- Avoid requiring the user to install Git merely to build a supplied package.
-- A builder ZIP should contain the complete source and required build material rather than a placeholder that expects to clone the repository later.
+[CORE]
+multi_platform=Twitch IRC+YouTube Live Chat+Kick Pusher
+ChatClient=Connect(input),Disconnect(); connecting while connected => disconnect/reconnect
+ChatMessage=platform-neutral backend->frontend chat:message
+MessageFragment=plain/emote-image; Twitch offsets converted client-side
+MessageFilter=intake-time; rejected permanently; config changes non-retroactive
+vanish=transparency+click-through hotkey
+themes=built-in/custom
+emotes=Twitch/BTTV/FFZ/7TV/YouTube/Kick
+badges=platform-specific
+YT_events=SuperChat+membership
+fade=configurable
+filters=bots/commands/users
+i18n=en-US/de-DE
 
-## Packaging history / failures to avoid
-Previous attempts at producing a GhostChat ZIP repeatedly failed because:
-- The ZIP did not actually contain the complete source.
-- The package expected Git to be installed or source to be downloaded separately.
-- The user reported "Ghost Chat is missing or incomplete."
-- The user reported that Go was not installed/on PATH.
-The next packaging workflow should therefore explicitly verify that the archive contains the actual source tree and all dependencies/build prerequisites that can legally and practically be bundled.
+[AUTO_LIVE]
+background monitor + auto chat connect, per-platform independent
+poll=Twitch+YouTube+Kick independently; one service failure must not block others
+interval=5s/10s/15s/30s/1m/2m/5m; runtime clamp 5..300; historical/default≈15s
+per_platform=AutoConnect
+live=>auto connect; autoOwned=true; emit auto-connected; optional auto-show/focus+vanish
+not_live=>disconnect ONLY autoOwned; emit auto-disconnected; optional hide tray
+manual connections=never disrupt
+Twitch channel persists
+Kick channel persists
+YouTube channel/handle/ID persists; temporary automatic broadcast URL MUST NOT overwrite saved input
+YouTube live=>current broadcast video URL
+settings=persist
 
-## OBS / streaming integration
-- OBS integration is an ongoing feature goal.
-- The user wanted OBS-related functionality included in the project's feature list/README and release notes when appropriate.
-- Streaming workflow improvements should prioritize reliable, immediately useful behavior over unnecessary complexity.
+[RECENT_DECISIONS/WORK]
+2026-10-03:
+- OBS untouched; explicitly no OBS work going forward
+- poll YouTube/Twitch/Kick live status
+- auto-connect each live chat
+- saved Twitch/Kick usernames/channels persist
+- persistent channel configuration
+- 15s independent live monitor
+- auto connect/disconnect without disrupting manual connections
+- Twitch IRC preserved
+- Kick Pusher preserved
+- YouTube StreamList low-latency transport + Innertube fallback
+- vendored protobuf for YouTube transport
+- unified ChatMessage mapping
+- preferred end-user auth UX="Sign in with Google"; no user-created credentials
+- a no-login/public-chat/API-key alternative was discussed; final policy must follow current source/user decision, do not invent
+- release build can embed YouTube API key via buildconfig ldflags; current README says self-builds require YOUTUBE_API_KEY; prebuilt releases embed release config
+- Twitch auth=keychain token store
+- Twitch live monitor uses access token when logged in
 
-## Update UI
-- An in-app update icon was reported as doing nothing.
-- This was an active bug/feature investigation and should be considered unresolved unless the current repository state proves otherwise.
-- Do not assume the update control works just because it exists.
+[CHAT_LOGGING]
+required=continuous DURING stream; NOT post-stream-only
+one session log can contain all connected platforms
+directory=user-selected
+messages=archived on receipt; remain even if moderator later deletes
+metadata=stream title when available; start/end; prefixes Y/T/K; emoji descriptors
+current source=NewApp->chatlog.NewLogger; every onMessage=>chatLog.Message
+chat:connected=>chatLog.Connect; chat:disconnected=>Disconnect; shutdown=>Close
+toggle=enable while connected => Connect current platforms; disable=>Close
+stream title=resolved after connection
+folder picker=SelectChatLogDirectory; stale/nonexistent saved dir ignored so native picker still opens
+HISTORICAL_BUGS=Browse did nothing; path field hard to read; user reported no logging; user explicitly requires live availability
+STATUS=source now contains live logging wiring, but runtime success MUST be verified before declaring fixed
 
-## Chat logging
-This is a major requirement and a known unresolved area.
-- Chat Log Browse button was reported as not working.
-- The text box showing the chat-log folder location was difficult to read and needs usable contrast/readability.
-- User explicitly asked whether chat logs are generated only after the stream ends.
-- User does NOT want logs to exist only after the stream finishes.
-- Desired behavior: chat should be logged continuously while the stream is running so the user can reference the log live.
-- User subsequently reported that it was not logging anything at all.
-- Therefore, live chat logging must be implemented and actually verified rather than merely creating a log file after shutdown.
-- A useful implementation should make it clear where the active log is stored and ensure entries are flushed/available during the stream.
+[UI/SETTINGS]
+persistent=settings/window position+size/channels/AutoConnect/themes/chat-log settings/etc
+tray=open/close/center/vanish/config-folder/quit
+minimize_to_tray
+auto_show_on_live
+live_poll_interval
+chat_log_enable/path
+YouTube API key
+Twitch account/auth
+path field=readable/editable
+Browse=must work
+settings changes must not regress channels/auth/logging
 
-## Settings
-- Settings persistence is a core requirement.
-- Settings should survive application restarts.
-- Folder/log path configuration should be readable and editable.
-- Do not regress existing settings while fixing logging or UI.
+[UPDATER]
+startup CheckForUpdate -> update:available
+InstallUpdate for installed Windows builds; updater handoff then process exits
+historical bug=update icon did nothing
+STATUS=verify current UI/runtime; never infer from control presence
 
-## Build expectations
-- Windows project.
-- Include build.bat or equivalent one-command build automation by default.
-- Installer/package should be self-contained enough that the user does not need Git to retrieve source.
-- If Go or another compiler/runtime is required, either bundle an appropriate dependency/toolchain where licensing permits or make the build package clearly self-contained; do not silently assume it is installed on PATH.
-- Never claim the package builds successfully without actually verifying the build.
+[AUTH]
+preferred UX="Sign in with Google"; no user-created GhostChat username/password
+Twitch=current keychain-backed token manager
+YouTube auth/API=current source/user decision; self-build README requires YOUTUBE_API_KEY; public release embeds release API config
+do not invent credentials policy
 
-## Current known issues / unfinished work
-1. Verify and fix the in-app update icon/control.
-2. Fix Chat Log Browse.
-3. Improve readability of the chat-log folder location field.
-4. Implement/verify continuous live chat logging.
-5. Confirm logs are readable while a stream is actively running.
-6. Continue OBS integration work and keep README/release notes synchronized when user-visible features are added.
-7. Produce a genuinely complete, self-contained Windows build/package rather than a source-incomplete ZIP.
+[BUILD/PACKAGING]
+prebuilt Windows user should not need Git/Go/Node/pnpm/Wails
+Windows WebView2 assumed included Windows10/11
+dev=Go1.25+;Node20+;pnpm;Wails3 CLI
+repo currently has build.bat,Taskfile.yml,.github workflows,build/,installer docs/settings
+historical builder ZIP requirement=complete source+build material; no Git clone/download
+failed=empty/incomplete ZIP; "Ghost Chat is missing or incomplete"; Go not on PATH
+installable product > source-only archive
+external toolchain only if legally/practically unavoidable; explicit requirement, never silently assume PATH
+verify archive before claiming self-contained/build success
 
-## Historical context
-- User previously requested a ZIP that could build GhostChat on their PC with a build.bat.
-- User wanted the ZIP to pull source from their GitHub fork, but then clarified that the ZIP must itself contain everything needed and must not require downloading from Git.
-- Multiple iterations were rejected because the supplied ZIP was empty or lacked source.
-- User explicitly asked for an installable version rather than just a source package.
-- The project has therefore been treated as both a source/build packaging task and a usable streaming application task.
+[HISTORICAL_REJECTED]
+incomplete ZIP=rejected
+Git-dependent build package=rejected
+assume Go installed=rejected
+post-stream-only chat logging=rejected
+OBS integration=rejected/out-of-scope
+Do not repeat without explicit reversal.
 
-## User working preferences
-- Prefer direct implementation/fixes rather than long explanations.
-- Do not claim something works unless it has actually been verified.
-- Preserve settings across launches.
-- Include build automation in Windows projects.
-- When making a significant user-visible feature/fix, update project documentation/release notes.
-- If a supplied build/archive is incomplete, fix the package itself rather than asking the user to install additional tools unless there is no practical alternative.
-- User may manually request a handoff at any time.
+[KNOWN_OPEN_VERIFY]
+1 updater icon/runtime
+2 Browse button/runtime
+3 chat-log path readability
+4 prove live logging runtime
+5 prove auto-live all 3 platforms + manual connection isolation
+6 prove YouTube StreamList/Innertube fallback
+7 prove persistence channels/AutoConnect/log path
+8 verify genuinely complete Windows package
+9 keep OBS untouched
 
-## Next-chat starting instructions
-Before making assumptions, inspect the current GitHub repository state because this handoff contains historical context and known requirements, while the repository contains the latest implementation. Treat unresolved issues above as unresolved until verified in the current source.
+[CURRENT_SOURCE_MAP]
+app.go: App{auth,clients,config,connectionState,connectionTransport,autoOwned,liveMonitorCancel,chatLog,window state}
+NewApp=>chatlog logger; onMessage logs every ChatMessage
+wireClients=>Twitch/YouTube/Kick; connected/disconnected wrapped for logging/transport
+ServiceStartup=>restore Twitch auth; start live monitor; updater check
+UpdateConfig=>persist config; chat-log enable state; vanish hotkey
+Connect=>Twitch/Kick channel persistence; YouTube manual input persistence; automatic YT URL does not overwrite saved channel
+monitor=startLiveMonitor->pollLivePlatforms->pollTwitchLive/pollKickLive/pollYouTubeLive->applyLiveState
+SelectChatLogDirectory=native directory picker; stale path validation
+InstallUpdate=exists
+root=current includes build.bat,go.mod/go.sum,Taskfile.yml,app.go,main.go,internal/,frontend/,build/,docs/,installer docs/settings
 
-## Handoff Continuity Instructions
+[USER_PREFS]
+direct_fix>long_explanation
+verify before claim
+preserve working behavior
+Windows=>build.bat/equivalent
+significant user-visible change=>README/release notes as appropriate
+handoff=manual anytime
+AI-only dense shorthand preferred
+do not make user re-explain known context
+current user decisions override stale historical goals
 
-This section is intentionally redundant so a future ChatGPT iteration can recover the handoff workflow even if the surrounding conversation is unavailable.
-
-Treat this file as the project's continuity record. Use it before asking the user to re-explain the project. Combine this historical context with the current GitHub repository/source, because the handoff describes why decisions were made while the repository describes the latest implementation.
-
-When updating or continuing this project:
-- Preserve the requirements, decisions, and working behavior documented here.
-- Treat listed unresolved issues as unresolved until the current source proves otherwise.
-- Do not repeat previously failed or rejected approaches without a clear reason.
-- Never claim code, builds, tests, installers, releases, or features work unless actually verified.
-- Prefer direct implementation/fixes when repository access permits.
-- When a significant feature or fix changes the project state, update this handoff with the new state and any important reasoning.
-- If the user manually asks for a handoff, capture all available project information, not merely a short summary.
-- A complete historical chat transcript may not be available. In that case, preserve every relevant detail available from current conversation context, retained project context, repository history, requirements, decisions, failed attempts, known issues, and user preferences.
+[CONTINUITY]
+Read before asking user to explain. Combine with current repo/source and recent conversation. Historical != proof. Explicit negative requirements are binding until user reverses. Significant state change=>update handoff. Full transcript may be unavailable; maximize recoverable context without inventing.
