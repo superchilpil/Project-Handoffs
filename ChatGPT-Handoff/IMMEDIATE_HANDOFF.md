@@ -107,7 +107,8 @@ Do not make the user explain the handoff procedure again.
 
 - Prefer direct implementation and fixes over lengthy explanations when the necessary tools are available.
 - Never claim something was built, tested, released, fixed, or verified unless it actually was.
-- For Windows projects, include a `build.bat` or equivalent one-command build script by default.
+- Executable builds should use GitHub Actions/workflows as the primary and expected build/release path; the user does NOT want to rely on their personal PC to build executables.
+- A local `build.bat`/equivalent is optional developer convenience only, not a mandatory project requirement. Do not add one solely because the project is Windows.
 - Preserve existing working behavior when fixing a specific issue.
 - Update user-facing release notes when significant user-visible changes are made.
 - Keep release notes concise and user-focused.
