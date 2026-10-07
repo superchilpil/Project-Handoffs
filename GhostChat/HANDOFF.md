@@ -1,6 +1,6 @@
 # GhostChat HANDOFF — AI CONTINUITY RECORD
 FORMAT=AI_ONLY; HUMAN_READABILITY=NONREQUIRED; DENSE_SHORTHAND_ALLOWED; PRIORITY=MAX_CONTEXT/TOKEN_EFFICIENCY
-LAST_RECONSTRUCTED=2026-10-05
+LAST_RECONSTRUCTED=2026-10-06
 IMPORTANT=Historical+intent context; compare current source before claiming implementation state.
 
 [IDENTITY]
@@ -48,6 +48,21 @@ YouTube channel/handle/ID persists; temporary automatic broadcast URL MUST NOT o
 YouTube live=>current broadcast video URL
 settings=persist
 
+[YOUTUBE_CONNECTION_STABILITY]
+2026-10-05/06 recent work focused on duplicate/replay protection and connection recovery.
+backend_dedupe=internal/chat/youtube/client.go seenIDs map; markSeen(id) bounded cache; reset on Connect; applies to StreamList and Innertube messages
+frontend_dedupe=frontend/src/components/Chat/Chat.tsx seenMessageIdsRef keyed platform:id; bounded relative to MAX_MESSAGES
+commit=34c4b3b14c77f1278f944c5a02a2838d4fb800f1 backend Innertube replay dedupe
+commit=04d10a68ad7e1d9977720da4afd0b16c2c1e0ae8 frontend replay guard
+commit=48dd43a7bdefd6d3f1ae042c3aa53c4fb68252c4 YouTube recovery resilience
+recovery=streamLoop retains pageToken across transient gRPC failures; exponential backoff up to 60s; Innertube pollLoop backoff/rebootstrap; rebootstrap after maxFailuresBeforeReboot=8 except rate-limit/auth-stale paths
+rate_limit_backoff=30s base up to 5m
+HTTP_timeout=targeted increase was attempted; verify exact current newHTTPClient value before claiming
+original_user_symptom=messages repeated, then disappeared/reappeared with increasing gaps; connection recovery was strengthened
+OPEN_VERIFY=runtime stream test still required; if duplicates persist, consider preserving seenIDs across reconnects or replacing reset/5000-entry behavior with a time-windowed cache
+release_notes_NEXT_RELEASE=connection fixes ONLY; do not mention vanish-position persistence, chat logging, UI changes, or unrelated work in that release's notes
+intended_release_note_points=improved YouTube connection resilience; greater tolerance for temporary network/API failures; longer request timeout if verified; improved recovery/reconnection; replayed-message protection during recovery
+
 [RECENT_DECISIONS/WORK]
 2026-10-03:
 - OBS untouched; explicitly no OBS work going forward
@@ -80,7 +95,7 @@ toggle=enable while connected => Connect current platforms; disable=>Close
 stream title=resolved after connection
 folder picker=SelectChatLogDirectory; stale/nonexistent saved dir ignored so native picker still opens
 HISTORICAL_BUGS=Browse did nothing; path field hard to read; user reported no logging; user explicitly requires live availability
-STATUS=source now contains live logging wiring, but runtime success MUST be verified before declaring fixed
+STATUS=source contains live logging wiring; runtime success MUST be verified before declaring fixed
 
 [UI/SETTINGS]
 persistent=settings/window position+size/channels/AutoConnect/themes/chat-log settings/etc
@@ -94,12 +109,15 @@ Twitch account/auth
 path field=readable/editable
 Browse=must work
 settings changes must not regress channels/auth/logging
+vanish_position_persistence=manual vanish saves X/Y; PositionSaved distinguishes valid 0,0; auto-show live must not overwrite manual vanish position; verify startup restore in current main.go before claiming complete
 
 [UPDATER]
 startup CheckForUpdate -> update:available
 InstallUpdate for installed Windows builds; updater handoff then process exits
 historical bug=update icon did nothing
-STATUS=verify current UI/runtime; never infer from control presence
+current fix=TitleBar awaits InstallUpdate, shows Updating…, logs failure, falls back to opening update URL, disables button while updating
+commits=a63adbd5c62afc90a22d4ef08027707e2cef83f8;da88cc2408d79b6707001b3c04de0151a1b023cb
+STATUS=runtime install/update still requires verification
 
 [AUTH]
 preferred UX="Sign in with Google"; no user-created GhostChat username/password
@@ -111,12 +129,21 @@ do not invent credentials policy
 prebuilt Windows user should not need Git/Go/Node/pnpm/Wails
 Windows WebView2 assumed included Windows10/11
 dev=Go1.25+;Node20+;pnpm;Wails3 CLI
-repo currently has build.bat,Taskfile.yml,.github workflows,build/,installer docs/settings
+repo has build.bat,Taskfile.yml,.github workflows,build/,installer docs/settings
 historical builder ZIP requirement=complete source+build material; no Git clone/download
 failed=empty/incomplete ZIP; "Ghost Chat is missing or incomplete"; Go not on PATH
 installable product > source-only archive
 external toolchain only if legally/practically unavoidable; explicit requirement, never silently assume PATH
 verify archive before claiming self-contained/build success
+GitHub Actions is primary executable build/release path; local build.bat is optional developer convenience
+
+[RELEASE_WORKFLOW]
+workflow=.github/workflows/release.yml
+dispatch=workflow_dispatch; version override; release-candidate toggle
+builds=macOS+Windows; Windows portable EXE+NSIS installer; latest.yml generated
+release_build=YouTube API key embedded via ldflags
+NEXT_RELEASE_NOTES=ONLY connection fixes from [YOUTUBE_CONNECTION_STABILITY]; explicitly exclude vanish persistence/chat logging/UI/unrelated work
+Do not edit release notes preemptively unless user asks/build is being prepared.
 
 [HISTORICAL_REJECTED]
 incomplete ZIP=rejected
@@ -127,38 +154,47 @@ OBS integration=rejected/out-of-scope
 Do not repeat without explicit reversal.
 
 [KNOWN_OPEN_VERIFY]
-1 updater icon/runtime
-2 Browse button/runtime
-3 chat-log path readability
-4 prove live logging runtime
-5 prove auto-live all 3 platforms + manual connection isolation
-6 prove YouTube StreamList/Innertube fallback
-7 prove persistence channels/AutoConnect/log path
-8 verify genuinely complete Windows package
-9 keep OBS untouched
+1 YouTube connection stability under long real stream
+2 if duplicates persist, inspect seenIDs lifecycle/reset behavior and frontend remount/fade behavior
+3 updater icon/runtime
+4 Browse button/runtime
+5 prove live logging runtime
+6 prove auto-live all 3 platforms + manual connection isolation
+7 prove YouTube StreamList/Innertube fallback
+8 prove persistence channels/AutoConnect/log path
+9 verify genuinely complete Windows package
+10 keep OBS untouched
+11 verify vanish-position startup restore before claiming complete
 
 [CURRENT_SOURCE_MAP]
-app.go: App{auth,clients,config,connectionState,connectionTransport,autoOwned,liveMonitorCancel,chatLog,window state}
+app.go=App{auth,clients,config,connectionState,connectionTransport,autoOwned,liveMonitorCancel,chatLog,window state}
 NewApp=>chatlog logger; onMessage logs every ChatMessage
 wireClients=>Twitch/YouTube/Kick; connected/disconnected wrapped for logging/transport
+chat:connected=>chatLog.Connect(platform,"")
 ServiceStartup=>restore Twitch auth; start live monitor; updater check
 UpdateConfig=>persist config; chat-log enable state; vanish hotkey
-Connect=>Twitch/Kick channel persistence; YouTube manual input persistence; automatic YT URL does not overwrite saved channel
+Connect=>Twitch/Kick channel persistence; YouTube manual input persistence; automatic YT URL does not overwrite saved channel; resolve chat-log stream title
 monitor=startLiveMonitor->pollLivePlatforms->pollTwitchLive/pollKickLive/pollYouTubeLive->applyLiveState
-SelectChatLogDirectory=native directory picker; stale path validation
-InstallUpdate=exists
+SelectChatLogDirectory=native directory picker; stale path validation; AttachToWindow
+InstallUpdate=exists; frontend now handles errors
+internal/chat/youtube/client.go=StreamList+Innertube; seenIDs/markSeen; backoff/rebootstrap
+frontend/src/components/Chat/Chat.tsx=frontend replay guard; MAX_MESSAGES=500
+frontend/src/components/Settings/GeneralSettings.tsx=chat log settings; readable path input; browse
+frontend/src/index.css=.chat-log-location-input
+internal/chatlog/logger.go=session logger; service history+active tracking; title/start/end/emoji descriptors
 root=current includes build.bat,go.mod/go.sum,Taskfile.yml,app.go,main.go,internal/,frontend/,build/,docs/,installer docs/settings
 
 [USER_PREFS]
 direct_fix>long_explanation
 verify before claim
 preserve working behavior
-BUILD_STRATEGY=GitHub_Actions_primary;LOCAL_PC_BUILD=NOT_REQUIRED;build.bat may exist only as optional developer convenience;do not require user to build executables locally
+BUILD_STRATEGY=GitHub_Actions_primary;LOCAL_PC_BUILD=NOT_REQUIRED;build.bat optional developer convenience only
 significant user-visible change=>README/release notes as appropriate
+release notes=concise,user-focused;next release connection-fixes-only unless user changes scope
 handoff=manual anytime
 AI-only dense shorthand preferred
 do not make user re-explain known context
 current user decisions override stale historical goals
 
 [CONTINUITY]
-Read before asking user to explain. Combine with current repo/source and recent conversation. Historical != proof. Explicit negative requirements are binding until user reverses. Significant state change=>update handoff. Full transcript may be unavailable; maximize recoverable context without inventing.
+Read before asking user to explain. Combine with current repo/source and recent conversation. Historical != proof. Explicit negative requirements are binding until user reverses. Significant state change=>update corresponding project handoff. Full transcript may be unavailable; maximize recoverable context without inventing.
