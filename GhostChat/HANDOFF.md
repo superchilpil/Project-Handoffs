@@ -8,7 +8,7 @@ repo=https://github.com/superchilpil/ghost-chat
 fork_of=https://github.com/Enubia/ghost-chat
 owner=superchilpil;branch=main;language=Go;framework=Wails_v3
 frontend=React+TypeScript+Zustand+CSS_Modules
-platforms=Windows+macOS
+platforms=Windows official release; macOS source-build support only
 central_handoff=https://github.com/superchilpil/Project-Handoffs
 purpose=transparent always-on-top desktop chat overlay; unified Twitch+YouTube+Kick
 priority=practical/installable Windows streaming chat overlay
@@ -140,7 +140,8 @@ GitHub Actions is primary executable build/release path; local build.bat is opti
 [RELEASE_WORKFLOW]
 workflow=.github/workflows/release.yml
 dispatch=workflow_dispatch; version override; release-candidate toggle
-builds=macOS+Windows; Windows portable EXE+NSIS installer; latest.yml generated
+official_release_target=Windows only; Windows portable EXE+NSIS installer; latest.yml generated; no macOS release artifacts/manifests
+macOS=users may build from source; not part of official release workflow
 release_build=YouTube API key embedded via ldflags
 NEXT_RELEASE_NOTES=ONLY connection fixes from [YOUTUBE_CONNECTION_STABILITY]; explicitly exclude vanish persistence/chat logging/UI/unrelated work
 Do not edit release notes preemptively unless user asks/build is being prepared.
@@ -152,6 +153,17 @@ assume Go installed=rejected
 post-stream-only chat logging=rejected
 OBS integration=rejected/out-of-scope
 Do not repeat without explicit reversal.
+
+[MAJOR_BUILD_RELEASE_CHANGES]
+2026-10-06:
+- Windows release workflow is the ONLY official release target; macOS release job/artifacts/manifest generation removed. macOS remains source-buildable only.
+- release=.github/workflows/release.yml now builds Windows portable+NSIS only and create-release depends only on Windows.
+- YouTube release secrets remain injected for final linker/build steps, but MUST NOT flow into binding-generation task variables/checksum labels.
+- build/Taskfile.yml generate:bindings now consumes BINDING_FLAGS instead of BUILD_FLAGS.
+- build/windows/Taskfile.yml defines secret-free BINDING_FLAGS for binding generation while BUILD_FLAGS retains final release ldflags/secrets for go build.
+- This fixes GitHub Actions Windows failure where masked secret values became '*' in .task/checksum filenames, producing Windows invalid-filename errors.
+- removed obsolete dummy latest-mac.yml generation from Windows-only release workflow.
+commits=aa74ccc4e0700600b1d16e1a9e1e1d59e266e9a6;d707b9729c26639e5b1199dd15eeaf17d9967885;eef582484c9b548dab7f1d14d2b89024f17ad95e
 
 [KNOWN_OPEN_VERIFY]
 1 YouTube connection stability under long real stream
