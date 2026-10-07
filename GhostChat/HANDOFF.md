@@ -165,13 +165,6 @@ Do not repeat without explicit reversal.
 - removed obsolete dummy latest-mac.yml generation from Windows-only release workflow.
 commits=aa74ccc4e0700600b1d16e1a9e1e1d59e266e9a6;d707b9729c26639e5b1199dd15eeaf17d9967885;eef582484c9b548dab7f1d14d2b89024f17ad95e
 
-[MAJOR_UI_CHANGE]
-2026-10-06:
-- YouTube API safety/bypass controls are exposed in General Settings so the owner bypass is visible without requiring users to hunt through the YouTube platform tab.
-- Password field uses password input; successful bypass state is persisted by backend fingerprint; disable control is available while enabled.
-- YouTubeSettings no longer duplicates the bypass controls.
-- Public UI may describe the 5-request daily safety limit and fallback; do not expose the owner secret/password value in docs/wiki/release notes.
-commits=df706c571edeb699da16b0c6224f29301f84177a;a48ac2d920a5e526d600fe4ef002a7fcbf0e21da;a5e47ed9687af3b55f5a983f73cb4c517b2d0145
 
 [KNOWN_OPEN_VERIFY]
 1 YouTube connection stability under long real stream
