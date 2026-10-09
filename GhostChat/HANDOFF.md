@@ -96,6 +96,7 @@ stream title=resolved after connection
 folder picker=SelectChatLogDirectory; stale/nonexistent saved dir ignored so native picker still opens
 HISTORICAL_BUGS=Browse did nothing; path field hard to read; user reported no logging; user explicitly requires live availability
 STATUS=source contains live logging wiring; runtime success MUST be verified before declaring fixed
+reconnect_behavior=chat log session file is reused across transient disconnects; session metadata expires after 2m with no active platforms, so reconnects within that window append to the same file
 
 [UI/SETTINGS]
 persistent=settings/window position+size/channels/AutoConnect/themes/chat-log settings/etc
