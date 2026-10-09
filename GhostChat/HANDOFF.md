@@ -46,8 +46,9 @@ Twitch channel persists
 Kick channel persists
 YouTube channel/handle/ID persists; temporary automatic broadcast URL MUST NOT overwrite saved input
 YouTube live=>current broadcast video URL
-live_detection=checkYouTubeWatchPageLive must require player microformat liveBroadcastDetails.isLiveNow=true; liveChatRenderer alone also exists on ended replay pages
+live_detection=checkYouTubeWatchPageLive requires player microformat liveBroadcastDetails.isLiveNow=true; liveChatRenderer alone also exists on ended replay pages
 2026-10-08 fix=ended YouTube streams now classify offline so applyLiveState disconnects autoOwned connection; no YouTube Data API quota consumed
+fallback=StreamList offlineAt emits chat:stream-ended; app disconnects the client and emits auto-disconnected for auto-owned connections
 settings=persist
 
 [YOUTUBE_CONNECTION_STABILITY]
@@ -171,7 +172,7 @@ commits=aa74ccc4e0700600b1d16e1a9e1e1d59e266e9a6;d707b9729c26639e5b1199dd15eeaf1
 
 [KNOWN_OPEN_VERIFY]
 1 YouTube connection stability under long real stream
-1a runtime verify auto-disconnect after stream ends; ended-replay liveChatRenderer false-positive fixed in monitor.go
+1a runtime verify auto-disconnect after stream ends; ended-replay liveChatRenderer false-positive fixed in monitor.go; StreamList offlineAt now triggers immediate disconnect
 2 if duplicates persist, inspect seenIDs lifecycle/reset behavior and frontend remount/fade behavior
 3 updater icon/runtime
 4 Browse button/runtime
