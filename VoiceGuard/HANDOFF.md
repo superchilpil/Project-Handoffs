@@ -96,7 +96,8 @@ OpenVINO/native DLL packaging sensitive
 [KNOWN_OPEN_VERIFY]
 1 lower-left logo size
 2 updater legacy install dir
-3 preserve PTT drain timing
+3 soundboard alias persistence: fixed config-load omission by restoring config.SoundboardAliases after SoundboardPhrases are loaded; commit=458a78e31cbb87cf56d0a7c52e6549b9c8b0cf01; runtime/build verification pending
+4 preserve PTT drain timing
 4 preserve soundboard sync
 5 preserve overlay semantics/geometry
 6 verify all build/test/release claims
