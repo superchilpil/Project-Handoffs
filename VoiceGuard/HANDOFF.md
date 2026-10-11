@@ -7,7 +7,7 @@ IMPORTANT=Historical+intent context; verify source/runtime before claiming imple
 repo=https://github.com/superchilpil/VoiceGuard
 branch=main
 publisher=Jack The Gooner
-known_release=6.7.7
+known_release=6.7.8
 central_handoff=https://github.com/superchilpil/Project-Handoffs
 platform=Windows
 stack=C#/.NET8 WinForms x64 self-contained
@@ -93,26 +93,14 @@ historical OS=Windows NT10.0.26200.0
 historical .NET9 SDK; current baseline .NET8
 OpenVINO/native DLL packaging sensitive
 
-[RECENT_STANDBY_GATING]
-change=SpeechDetector.AddPcm48k now rejects packets unless pttSegmentActive; defense-in-depth against accidental idle profanity ASR
-preserved=AudioEngine live passthrough remains active; dedicated AddSoundboardListenPcm path remains separate; EndPttSegment still flushes queued audio so PTT drain/censor timing is preserved
-architecture=Whisper processor remains loaded/warmed while engine is running for low trigger latency; ProcessQueueAsync sleeps on SemaphoreSlim when no work
-status=source edit committed; build/runtime CPU behavior not verified; normal idle CPU may still come from always-on capture/output audio path, not Whisper inference
-
-[RECENT_PERFORMANCE_CHANGE]
-commit=2bb64b1729c225580f78c57a3b5e5642d81abe1e
-change=Whisper builder now uses WithThreads(4); default used all logical CPU threads and may hurt gaming performance even with NPU encoder offload
-status=GitHub source edit committed; build/runtime performance not verified
-NPU_scope=Intel OpenVINO NPU encoder only; decoder/other app work may still use CPU
-
 [KNOWN_OPEN_VERIFY]
 1 lower-left logo size
 2 updater legacy install dir
 3 soundboard alias persistence: fixed config-load omission by restoring config.SoundboardAliases after SoundboardPhrases are loaded; commit=458a78e31cbb87cf56d0a7c52e6549b9c8b0cf01; runtime/build verification pending
 4 preserve PTT drain timing
-4 preserve soundboard sync
-5 preserve overlay semantics/geometry
-6 verify all build/test/release claims
+5 preserve soundboard sync
+6 preserve overlay semantics/geometry
+7 verify all build/test/release claims
 
 [USER_PREFS]
 direct implementation>long explanation
