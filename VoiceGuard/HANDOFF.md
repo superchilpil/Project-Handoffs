@@ -113,21 +113,19 @@ handoff=manual anytime
 AI-only dense shorthand preferred
 
 
-[UI_REDESIGN_6.7.8_TO_7.0.0]
-active_branch=ui/jtg-rgb-redesign
-main=DO_NOT_MERGE_OR_MODIFY_UNTIL_USER_EXPLICITLY_CONFIRMS_FINAL_UI
-current_ui_status=running on user's Windows PC; user is reviewing Audio dropdown/slider colors and Settings toggle sizing
-latest_ui_commit=477e3335713920193f3d7b7b6032f42eb8f39ea2
-latest_build_run=https://github.com/superchilpil/VoiceGuard/actions/runs/38176348643
-latest_build_status=GitHub Actions build+publish success; artifact is available in that run; runtime/visual verification remains user's responsibility
-latest changes=custom purple Audio dropdown buttons replacing native white arrows; custom-drawn purple volume slider; explicit compact Settings toggle size/position
-user's last feedback=prior build still showed white dropdown button, native volume slider, and oversized/clipped Settings toggles; latest commit attempts direct custom drawing/replacement rather than only changing native colors
-must_verify=launch latest artifact; check no startup exception; Audio input/output dropdown arrows purple; slider track/thumb use VoiceGuard palette; both startup/tray toggles compact, same size, not clipped; confirm other pages/audio behavior unchanged
-next_action=wait for user visual confirmation and any further corrections; do not merge/release before explicit confirmation
-release_plan=after user confirms final fixes, merge ui/jtg-rgb-redesign into main and ship release 7.0.0 via .github/workflows/windows-installer.yml
-release_notes_for_7.0.0=only a brief high-level UI overhaul statement; avoid listing individual UI changes or technical details (e.g. "UI overhaul for a cleaner, more consistent VoiceGuard experience.")
-release_notes_source=RELEASE_NOTES.md; curate the 7.0.0 release notes to the brief UI-overhaul wording when preparing the release; do not accidentally publish the accumulated testing-branch changelog as detailed 7.0.0 notes
-release_gate=explicit user approval after visual testing; keep main/stable release untouched until then
+[UI_REDESIGN_TO_7.0.0]
+active_branch=main
+merged_pr=https://github.com/superchilpil/VoiceGuard/pull/1
+merge_commit=5d7a82149b6c04eb6aaf277b22e09b8bb66e24ba
+last_mask_adjustment_commit=d1c08e96c33c3f5a245ca2894d8c19082fca290f
+mask_geometry=left x shifted +3 px; width reduced 3 px, preserving the previously added rightmost 6 px; height remains 3 px
+release_version=7.0.0 in VoiceGuard.csproj; AssemblyVersion/FileVersion=7.0.0.0
+release_notes=RELEASE_NOTES.md contains only "UI overhaul for a cleaner, more consistent VoiceGuard experience."
+workflow=.github/workflows/windows-installer.yml; manual workflow_dispatch only; input release_version default 7.0.0; draft_release input; tag-push trigger removed
+workflow_fix=version commit step skips commit/push if requested version already matches project, then proceeds to tag/build/release
+publish_url=https://github.com/superchilpil/VoiceGuard/actions/workflows/windows-installer.yml
+do_not_start_release=User requested workflow preparation but did not request dispatch; do not run it automatically
+verification=Latest UI visually confirmed by user except final dropdown mask left-edge adjustment; no runtime validation of that last adjustment yet. Audio engine was not intentionally changed.
 
 [CONTINUITY]
 Use before asking user to re-explain. Current source beats stale history for implementation state; current user decisions beat old requirements. Rejected approaches stay rejected. Significant state changes=>update. Full transcript may be unavailable; never fabricate.
