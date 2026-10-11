@@ -7,7 +7,7 @@ IMPORTANT=Historical+intent context; verify source/runtime before claiming imple
 repo=https://github.com/superchilpil/VoiceGuard
 branch=main
 publisher=Jack The Gooner
-known_release=6.7.6
+known_release=6.7.7
 central_handoff=https://github.com/superchilpil/Project-Handoffs
 platform=Windows
 stack=C#/.NET8 WinForms x64 self-contained
@@ -92,6 +92,12 @@ WDK avoided
 historical OS=Windows NT10.0.26200.0
 historical .NET9 SDK; current baseline .NET8
 OpenVINO/native DLL packaging sensitive
+
+[RECENT_PERFORMANCE_CHANGE]
+commit=2bb64b1729c225580f78c57a3b5e5642d81abe1e
+change=Whisper builder now uses WithThreads(4); default used all logical CPU threads and may hurt gaming performance even with NPU encoder offload
+status=GitHub source edit committed; build/runtime performance not verified
+NPU_scope=Intel OpenVINO NPU encoder only; decoder/other app work may still use CPU
 
 [KNOWN_OPEN_VERIFY]
 1 lower-left logo size
