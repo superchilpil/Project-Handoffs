@@ -113,19 +113,19 @@ handoff=manual anytime
 AI-only dense shorthand preferred
 
 
-[UI_REDESIGN_TO_7.0.0]
-active_branch=main
-merged_pr=https://github.com/superchilpil/VoiceGuard/pull/1
-merge_commit=5d7a82149b6c04eb6aaf277b22e09b8bb66e24ba
-last_mask_adjustment_commit=d1c08e96c33c3f5a245ca2894d8c19082fca290f
-mask_geometry=left x shifted +3 px; width reduced 3 px, preserving the previously added rightmost 6 px; height remains 3 px
-release_version=7.0.0 in VoiceGuard.csproj; AssemblyVersion/FileVersion=7.0.0.0
-release_notes=RELEASE_NOTES.md contains only "UI overhaul for a cleaner, more consistent VoiceGuard experience."
-workflow=.github/workflows/windows-installer.yml; manual workflow_dispatch only; input release_version default 7.0.0; draft_release input; tag-push trigger removed
-workflow_fix=version commit step skips commit/push if requested version already matches project, then proceeds to tag/build/release
-publish_url=https://github.com/superchilpil/VoiceGuard/actions/workflows/windows-installer.yml
-do_not_start_release=User requested workflow preparation but did not request dispatch; do not run it automatically
-verification=Latest UI visually confirmed by user except final dropdown mask left-edge adjustment; no runtime validation of that last adjustment yet. Audio engine was not intentionally changed.
+[VOICEGUARD_POST_7.0.0_RELEASE_PROCESS]
+latest_release=https://github.com/superchilpil/VoiceGuard/releases/tag/v7.0.0
+latest_release_asset=https://github.com/superchilpil/VoiceGuard/releases/download/v7.0.0/VoiceGuard_Setup_7.0.0.exe
+main_branch=main
+testing_branch=ui/jtg-rgb-redesign
+release_workflow=.github/workflows/windows-installer.yml
+release_workflow_commit=769d302ca9db8a290e16ac21084f3ea4c1ab2900
+versioning=manual workflow_dispatch; automatically increments patch from current csproj version; after patch reaches 9, next version resets patch to 0 and increments minor (7.0.9 -> 7.1.0); no push-tag trigger to avoid duplicate release runs
+next_release_after_7.0.0=7.0.1
+draft_release_input=workflow dispatch includes optional draft_release toggle
+future_development_process=develop and test future UI/features on ui/jtg-rgb-redesign first; provide a Windows build artifact; user visually/runtime tests; fix feedback; only merge to main after explicit user approval; run release workflow only when user requests release
+release_notes=keep user-facing notes concise and high-level unless user asks for detail
+audio_engine_constraint=preserve audio engine and PTT passthrough behavior unless user explicitly requests changes
 
 [CONTINUITY]
 Use before asking user to re-explain. Current source beats stale history for implementation state; current user decisions beat old requirements. Rejected approaches stay rejected. Significant state changes=>update. Full transcript may be unavailable; never fabricate.
