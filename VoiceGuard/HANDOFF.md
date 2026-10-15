@@ -138,3 +138,13 @@ change=exclusive UI test-audio playback shared by replacement-sound and soundboa
 volume_behavior=preserved item gain then master gain, independently; no live audio/PTT/delay pipeline changes
 validation=GitHub Actions build-validation run https://github.com/superchilpil/VoiceGuard/actions/runs/38672745431 was queued at handoff update; verify completion before claiming build success
 next=download VoiceGuard-Test-win-x64 artifact after successful workflow; user runtime-test rapid repeat clicks and switching between soundboard/replacement Test buttons; do not merge to main without explicit approval
+
+
+[SESSION_UPDATE_2026-10-15]
+main_commit=c4c6d2375c62084fbdbafaa4d4d9429c209a92b8
+change=carried the tested item/master volume behavior plus exclusive UI test playback into main; no unrelated workflow changes merged
+release_requested=yes
+release_workflow=.github/workflows/windows-installer.yml; workflow_dispatch only; main workflow auto-increments 7.0.0 to 7.0.1; draft_release=false for public release
+release_status=not yet dispatched; current GitHub connection exposes workflow-run reads/reruns but no workflow_dispatch action; user must click Run workflow on https://github.com/superchilpil/VoiceGuard/actions/workflows/windows-installer.yml
+next=run release workflow on main, verify installer/release succeeds; user runtime-test rapid repeat and cross-button test playback
+speech_to_text=weekend work planned; existing test branch feature/voice-to-text-test; keep speech-to-text work isolated from main unless user directs otherwise
