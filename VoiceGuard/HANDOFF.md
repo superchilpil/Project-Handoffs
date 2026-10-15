@@ -129,3 +129,12 @@ audio_engine_constraint=preserve audio engine and PTT passthrough behavior unles
 
 [CONTINUITY]
 Use before asking user to re-explain. Current source beats stale history for implementation state; current user decisions beat old requirements. Rejected approaches stay rejected. Significant state changes=>update. Full transcript may be unavailable; never fabricate.
+
+
+[SESSION_UPDATE_2026-10-14]
+active_work_branch=fix/volume-sliders-test
+latest_commit=131af2c7922838805eacd85c64b5fd9c004627d1
+change=exclusive UI test-audio playback shared by replacement-sound and soundboard Test actions; newest click cancels active clip and supersedes older queued requests; cancellation-aware playback loop stops/disposes old player before next begins
+volume_behavior=preserved item gain then master gain, independently; no live audio/PTT/delay pipeline changes
+validation=GitHub Actions build-validation run https://github.com/superchilpil/VoiceGuard/actions/runs/38672745431 was queued at handoff update; verify completion before claiming build success
+next=download VoiceGuard-Test-win-x64 artifact after successful workflow; user runtime-test rapid repeat clicks and switching between soundboard/replacement Test buttons; do not merge to main without explicit approval
