@@ -163,3 +163,13 @@ next=check latest workflow; provide test artifact; user runtime-test mic capture
 latest_commit=7595a57f6956a6b647bf3018ce835788c8f6997f
 build=success;run=https://github.com/superchilpil/VoiceGuard/actions/runs/39133791698;artifact=VoiceGuard-Test-win-x64;artifact_id=12139545079
 next=user runtime test; keep branch isolated; no main merge; inspect failures/feedback before additional changes
+
+
+[SESSION_UPDATE_2026-10-18_LIVE_DICTATION_REVISION]
+active_work_branch=feature/voice-to-text-test
+latest_commit=ad3c37167f0c6b9bfd61ef97af533bda05b9fa2d
+feature=changed the experimental interaction to live game-chat dictation; first activation captures the foreground game, presses configured chat-open key (default Enter), and starts mic capture; Whisper rolling snapshots update typed chat text live with common-prefix diffing to correct without duplicating; a single activation begins a short 375ms disambiguation window then stops capture and waits for final Whisper result before pressing Enter to send; second activation inside that window cancels, backspaces VoiceGuard-entered text, and presses Esc; Escape also cancels; no staged transcript/Send button flow
+implementation=VoiceToTextForm.cs handles target focus, incremental text correction, final submit, and cancel; SpeechDetector.cs queues rolling 1.5s snapshots, coalesces stale queued interim snapshots, prioritizes profanity/filter work, and only surfaces final failures; MainForm.cs wires live transcript callback
+validation=GitHub Actions run https://github.com/superchilpil/VoiceGuard/actions/runs/39134471747 on latest commit has Build, self-contained publish, and executable verification successful; artifact upload pending at handoff update time
+safety=experimental branch only; no changes merged to main or released; user should test foreground targeting, live corrections, single-press send, double-tap/escape cancellation, and existing PTT/filter/soundboard behavior
+next=wait for artifact upload completion, share VoiceGuard-Test-win-x64 from the latest Actions run; test carefully in a game with no sensitive chat; revise only on this branch based on runtime feedback
