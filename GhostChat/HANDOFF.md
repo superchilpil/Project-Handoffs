@@ -238,3 +238,9 @@ Read before asking user to explain. Combine with current repo/source and recent 
 - Commit=5fb22ce6a7d057b6b5c97fb3ab316e51c262427e
 - Not yet Windows build/runtime tested. Verify: begin with chat vanished on primary monitor, launch configured game, confirm chat moves to monitor 2, close game, confirm it returns vanished and remains above browser windows; also verify a non-vanished pre-game state restores non-topmost.
 
+
+[SETTINGS_EXPANSION_ANCHOR_FIX]
+2026-10-18:
+- Fixed app.go ExpandForSettings/ShrinkToChat to preserve the chat window's original right edge: capture original X/width, expand to 1000px while shifting the window left by the added width, then restore original X when shrinking.
+- Commit in ghost-chat main: da975806f556f60633112c4f818dcdcb2a2bdd00
+- Not yet Windows build/runtime tested. Verify Settings opens to the left while chat content remains at its prior screen coordinates, and closing Settings returns the window to its original bounds. Check repeated open/close and dragging/repositioning between cycles.
