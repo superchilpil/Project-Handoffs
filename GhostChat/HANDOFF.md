@@ -43,7 +43,7 @@ live=>auto connect; autoOwned=true; emit auto-connected; optional auto-show/focu
 game_specific_chat_mode=General.FullscreenGameMode (default off) plus General.FullscreenGameExecutables; dedicated Settings > Games tab lets users add currently running executable names or type an .exe manually, remove entries, and enable/disable behavior
 fullscreen_game_detection=Windows process snapshot checks configured executable names every 2s, regardless of focus or fullscreen mode; when any selected process runs, move opaque/non-vanished chat to first non-primary monitor; when all selected processes exit, restore previous position and vanish state; unlisted borderless games do not trigger
 fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; Win32 no-activate show keeps game focus; position and vanish state restore after the last configured game closes
-fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; GameSettings.tsx; Settings.tsx dedicated Games tab; app.go exposes GetRunningExecutables()
+fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; GameSettings.tsx; Settings.tsx dedicated Games tab; executable names are entered manually in GameSettings.tsx
 not_live=>disconnect ONLY autoOwned; emit auto-disconnected; optional hide tray
 manual connections=never disrupt
 Twitch channel persists
