@@ -202,3 +202,12 @@ feature=when live speech-to-text recording begins, MainForm receives an active c
 validation=source checked for callback wiring and blue color mapping; build not yet verified; inspect latest feature branch Actions workflow and only share an artifact built from these latest source commits
 next=verify GitHub Actions build, then test Text and LED overlay styles during live dictation, ensure blue indicator ends on send/cancel, and confirm other modes retain existing colors; do not merge to main without explicit user approval
 
+
+[SESSION_UPDATE_2026-10-18_SOUNDBOARD_OVERLAY_PHRASE]
+active_work_branch=feature/voice-to-text-test
+latest_source_commit=864362c320a96a213b777a726ae5fec8b43f4e85
+change=while a soundboard phrase is actually being transmitted, the Text overlay now displays the detected/configured phrase instead of the generic TRANSMIT label; resulting format is VOICEGUARD • SOUNDBOARD • <phrase> ♪; existing bullet separators remain and the music note marks playback; LED overlay continues to show its existing purple soundboard state
+scope=only changed the SetMode call in MainForm.cs; no soundboard detection/playback logic, PTT, filtering, or speech-to-text behavior changed
+validation=source update pushed to feature/voice-to-text-test; build and runtime behavior still need verification via latest GitHub Actions artifact
+merge_policy=do not merge to main yet; user wants to test this alongside the other branch changes and only then merge the overlay change if successful, without bundling unrelated experimental changes
+next=verify latest workflow run/artifact for commit 864362c320a96a213b777a726ae5fec8b43f4e85; test Text overlay shows actual matched phrase plus ♪ during playback, returns to LIVE when playback ends/cancels, and LED style remains purple; then prepare an isolated overlay-only merge/cherry-pick if approved
