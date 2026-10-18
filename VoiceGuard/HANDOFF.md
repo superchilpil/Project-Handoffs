@@ -225,3 +225,13 @@ build_failure=automatic build reported CS1002 ; expected at VoiceToTextForm.cs l
 fix=added missing semicolon only; no behavior changes intended
 validation=fix pushed; build result for new commit not yet verified
 next=check automatic Actions run for commit 69a9bfa9307cd67074d269b42bbb5fa64b352929; if green, provide artifact for runtime testing; keep main untouched
+
+[SESSION_UPDATE_2026-10-18_OVERLAY_TO_MAIN_AND_HOTKEY_FIX]
+main_overlay_commits=7bbdc7cc8751e40ca68e0dc72b35ecc46c033207 (MainForm.cs phrase label VOICEGUARD • SOUNDBOARD • <phrase> ♪); 74bad96daf0d9a5b913c9a7e5bee9c83b275f43d (ModeOverlayForm.cs dynamic text width 230-700px, recenter after resize); only soundboard overlay display changes pushed directly to main; no STT feature files or audio logic merged
+overlay_validation=source updates committed; build/runtime verification pending; user intends to run a new build
+active_stt_branch=feature/voice-to-text-test
+hotkey_fix_commit=8264c47fe3ba9a5e091ec5613420b691e4e4a7bf
+hotkey_diagnosis=VoiceToTextForm used two WH_KEYBOARD_LL PttKeyHook instances; hotkey detection remained nonfunctional at runtime per user report
+hotkey_change=replaced experimental STT activation/Escape low-level hooks with a dedicated background GetAsyncKeyState rising-edge poll (8ms interval); activation and Escape keys are not consumed; Escape cancellation remains pass-through; existing main PTT PttKeyHook untouched
+validation=feature/** triggers build-validation on push; await Actions result for 8264c47fe3ba9a5e091ec5613420b691e4e4a7bf before sharing test artifact; no STT changes merged to main
+next=1) user can run installer build on main to test overlay phrase and width; 2) check feature branch automatic build for hotkey fix and provide artifact after successful validation; runtime-test hotkey with VoiceGuard/model started and game foreground, then test live text, send/cancel, Escape pass-through, and existing PTT/filter/soundboard
