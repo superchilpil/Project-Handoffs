@@ -156,5 +156,10 @@ latest_commit=7595a57f6956a6b647bf3018ce835788c8f6997f
 feature=experimental local Whisper voice-to-text; user opens Voice-to-Text from Settings; VoiceGuard must be running/model ready; activation key default F8; first press records from physical mic while engine idle, second stops and transcribes, third confirms/sends to the foreground game; Escape cancels; quick double-tap while recording cancels; transcript editable before send; chat-open key default Enter; max recording 20s
 architecture=reuse AudioEngine physical mic capture while idle; separate VoiceToText PCM buffer and SpeechDetector queue item; transcription work yields to profanity/censor analysis; no second mic capture device; live passthrough is preserved; no automatic sending before confirmation
 files=MainForm.cs;AudioEngine.cs;SpeechDetector.cs;VoiceToTextForm.cs;build-validation workflow now runs feature/** and fix/** and uploads VoiceGuard-Test-win-x64
-validation=latest commit build run https://github.com/superchilpil/VoiceGuard/actions/runs/39133791698 in progress; prior build run for commit 0a58d73c5ab190aafdb0abb5181b20eca804acc6 succeeded; latest isolation patches keep VTT outside filter queue state, timing watermarks, and censor audio history; verify latest commit build before sharing artifact
+validation=latest commit build run https://github.com/superchilpil/VoiceGuard/actions/runs/39133791698 succeeded on 7595a57f6956a6b647bf3018ce835788c8f6997f; artifact=VoiceGuard-Test-win-x64; artifact_id=12139545079; expiry=2026-11-01; isolation patches keep VTT outside filter queue state, timing watermarks, and censor audio history
 next=check latest workflow; provide test artifact; user runtime-test mic capture/transcription/confirm-send/cancel and ensure existing PTT/filter/soundboard behavior remains unchanged; keep isolated; no merge to main unless explicitly approved
+
+[SESSION_UPDATE_2026-10-18_FINAL]
+latest_commit=7595a57f6956a6b647bf3018ce835788c8f6997f
+build=success;run=https://github.com/superchilpil/VoiceGuard/actions/runs/39133791698;artifact=VoiceGuard-Test-win-x64;artifact_id=12139545079
+next=user runtime test; keep branch isolated; no main merge; inspect failures/feedback before additional changes
