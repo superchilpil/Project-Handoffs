@@ -193,3 +193,12 @@ safety_fix=reject VoiceGuard main window as a dictation target; verify capture c
 validation=source changes pushed to feature branch; check latest GitHub Actions build for commit ce307445a0207f57b13931320c836ba3bd19409f before sharing a new test artifact; earlier successful artifact predates these changes and must not be reused
 next=verify build; if it fails, inspect logs and fix only feature/voice-to-text-test; user should test hotkey with VoiceGuard started and game focused, live text, send/double-tap cancel/Escape, key persistence, nav order, and unchanged PTT/filter/delay/soundboard; no merge to main without explicit approval
 
+[SESSION_UPDATE_2026-10-18_STT_OVERLAY_BLUE]
+active_work_branch=feature/voice-to-text-test
+latest_mainform_sha=8e2546990c8afbf60ad44c1f554e72f6ad7373b3
+latest_voicetotext_sha=a77dd7eb9b346fd5cb4476e378a36d83920f1a3e
+latest_modeoverlay_sha=a94ab42d6d8abc716a76f5b987f7da1fb766f6d5
+feature=when live speech-to-text recording begins, MainForm receives an active callback and changes mode to SPEECH TO TEXT; ModeOverlayForm maps SPEECH TO TEXT / DICTATION to DodgerBlue for both Text style lettering and LED gradient; overlay returns to LIVE after successful send or cancellation; remains blue while final transcription is being processed
+validation=source checked for callback wiring and blue color mapping; build not yet verified; inspect latest feature branch Actions workflow and only share an artifact built from these latest source commits
+next=verify GitHub Actions build, then test Text and LED overlay styles during live dictation, ensure blue indicator ends on send/cancel, and confirm other modes retain existing colors; do not merge to main without explicit user approval
+
