@@ -40,10 +40,10 @@ poll=Twitch+YouTube+Kick independently; one service failure must not block other
 interval=5s/10s/15s/30s/1m/2m/5m; runtime clamp 5..300; historical/default≈15s
 per_platform=AutoConnect
 live=>auto connect; autoOwned=true; emit auto-connected; optional auto-show/focus+vanish
-fullscreen_game_mode=General.FullscreenGameMode (default off); Windows foreground fullscreen-sized window detection every 500ms; if active, show opaque/non-vanished chat on first non-primary monitor; restore previous window position+vanish state when detection ends
-fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; no-activate Win32 show keeps game focus; vanish hotkey is ignored during game mode; when Ghost Chat has focus for position adjustment, tracked game process lifetime prevents premature restore
-fullscreen_detection=Windows foreground window bounds match monitor bounds; Windows cannot universally distinguish exclusive from borderless fullscreen; exits on leaving fullscreen unless Ghost Chat itself has focus, then waits for tracked game process to exit
-fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; setting in GeneralSettings.tsx
+game_specific_chat_mode=General.FullscreenGameMode (default off) plus General.FullscreenGameExecutables; dedicated Settings > Games tab lets users add currently running executable names or type an .exe manually, remove entries, and enable/disable behavior
+fullscreen_game_detection=Windows process snapshot checks configured executable names every 2s, regardless of focus or fullscreen mode; when any selected process runs, move opaque/non-vanished chat to first non-primary monitor; when all selected processes exit, restore previous position and vanish state; unlisted borderless games do not trigger
+fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; Win32 no-activate show keeps game focus; position and vanish state restore after the last configured game closes
+fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; GameSettings.tsx; Settings.tsx dedicated Games tab; app.go exposes GetRunningExecutables()
 not_live=>disconnect ONLY autoOwned; emit auto-disconnected; optional hide tray
 manual connections=never disrupt
 Twitch channel persists
@@ -187,7 +187,7 @@ commits=aa74ccc4e0700600b1d16e1a9e1e1d59e266e9a6;d707b9729c26639e5b1199dd15eeaf1
 9 verify genuinely complete Windows package
 10 keep OBS untouched
 11 verify vanish-position startup restore before claiming complete
-12 runtime verify fullscreen-game mode with Fortnite exclusive fullscreen, second monitor placement, no focus steal, opacity/vanish restoration, saved drag position; Windows build/tests not yet run
+12 runtime verify game-specific chat mode with Fortnite executable selected; verify CoD/borderless games remain unaffected when not selected, multi-game switching, no focus steal, opacity/vanish restoration, saved drag position; Windows build/tests not yet run
 
 [CURRENT_SOURCE_MAP]
 app.go=App{auth,clients,config,connectionState,connectionTransport,autoOwned,liveMonitorCancel,chatLog,window state}
