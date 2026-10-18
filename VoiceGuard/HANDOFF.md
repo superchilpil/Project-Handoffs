@@ -148,3 +148,13 @@ release_workflow=.github/workflows/windows-installer.yml; workflow_dispatch only
 release_status=not yet dispatched; current GitHub connection exposes workflow-run reads/reruns but no workflow_dispatch action; user must click Run workflow on https://github.com/superchilpil/VoiceGuard/actions/workflows/windows-installer.yml
 next=run release workflow on main, verify installer/release succeeds; user runtime-test rapid repeat and cross-button test playback
 speech_to_text=weekend work planned; existing test branch feature/voice-to-text-test; keep speech-to-text work isolated from main unless user directs otherwise
+
+
+[SESSION_UPDATE_2026-10-18]
+active_work_branch=feature/voice-to-text-test
+latest_commit=b0ed2ec2cb36d36634e96543af97282e7c2ad8ff
+feature=experimental local Whisper voice-to-text; user opens Voice-to-Text from Settings; VoiceGuard must be running/model ready; activation key default F8; first press records from physical mic while engine idle, second stops and transcribes, third confirms/sends to the foreground game; Escape cancels; quick double-tap while recording cancels; transcript editable before send; chat-open key default Enter; max recording 20s
+architecture=reuse AudioEngine physical mic capture while idle; separate VoiceToText PCM buffer and SpeechDetector queue item; transcription work yields to profanity/censor analysis; no second mic capture device; live passthrough is preserved; no automatic sending before confirmation
+files=MainForm.cs;AudioEngine.cs;SpeechDetector.cs;VoiceToTextForm.cs;build-validation workflow now runs feature/** and fix/** and uploads VoiceGuard-Test-win-x64
+validation=build run https://github.com/superchilpil/VoiceGuard/actions/runs/39133652870 pending at update; prior run for commit 0a58d73c5ab190aafdb0abb5181b20eca804acc6 succeeded; verify latest commit build before sharing artifact
+next=check latest workflow; provide test artifact; user runtime-test mic capture/transcription/confirm-send/cancel and ensure existing PTT/filter/soundboard behavior remains unchanged; keep isolated; no merge to main unless explicitly approved
