@@ -40,6 +40,9 @@ poll=Twitch+YouTube+Kick independently; one service failure must not block other
 interval=5s/10s/15s/30s/1m/2m/5m; runtime clamp 5..300; historical/default≈15s
 per_platform=AutoConnect
 live=>auto connect; autoOwned=true; emit auto-connected; optional auto-show/focus+vanish
+fullscreen_game_mode=General.FullscreenGameMode (default off); Windows foreground fullscreen-sized window detection every 500ms; if active, show opaque/non-vanished chat on first non-primary monitor; restore previous window position+vanish state when detection ends
+fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; no-activate Win32 show keeps game focus; Windows cannot universally distinguish exclusive from borderless fullscreen, so detector matches foreground window bounds to monitor bounds
+fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; setting in GeneralSettings.tsx
 not_live=>disconnect ONLY autoOwned; emit auto-disconnected; optional hide tray
 manual connections=never disrupt
 Twitch channel persists
@@ -183,6 +186,7 @@ commits=aa74ccc4e0700600b1d16e1a9e1e1d59e266e9a6;d707b9729c26639e5b1199dd15eeaf1
 9 verify genuinely complete Windows package
 10 keep OBS untouched
 11 verify vanish-position startup restore before claiming complete
+12 runtime verify fullscreen-game mode with Fortnite exclusive fullscreen, second monitor placement, no focus steal, opacity/vanish restoration, saved drag position; Windows build/tests not yet run
 
 [CURRENT_SOURCE_MAP]
 app.go=App{auth,clients,config,connectionState,connectionTransport,autoOwned,liveMonitorCancel,chatLog,window state}
