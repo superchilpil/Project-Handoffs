@@ -173,3 +173,12 @@ implementation=VoiceToTextForm.cs handles target focus, incremental text correct
 validation=GitHub Actions run https://github.com/superchilpil/VoiceGuard/actions/runs/39134471747 succeeded on latest commit; artifact=VoiceGuard-Test-win-x64; artifact_id=12139402063; size=108749868 bytes; expiry=2026-11-01
 safety=experimental branch only; no changes merged to main or released; user should test foreground targeting, live corrections, single-press send, double-tap/escape cancellation, and existing PTT/filter/soundboard behavior
 next=wait for artifact upload completion, share VoiceGuard-Test-win-x64 from the latest Actions run; test carefully in a game with no sensitive chat; revise only on this branch based on runtime feedback
+
+
+[SESSION_UPDATE_2026-10-18_NAV_AND_ESCAPE]
+active_work_branch=feature/voice-to-text-test
+latest_commit=44bb1755593b8f6e9cb953aa1b51350252eadab0
+ui=added dedicated Speech to Text left-nav page in MainForm.cs, with dark/purple design language, configurable dictation activation and game chat-open keys, saved settings, usage instructions, and button to open the live dictation runtime window; removed duplicate launcher from general Settings page
+escape_behavior=VoiceToTextForm.cs Escape global hook calls CancelSession(false,false); this stops/cancels current recognition generation and resets local session state without sending backspaces or injecting Escape; physical Escape passes through to game; double-tap remains clear typed text plus send Escape
+build=workflow run https://github.com/superchilpil/VoiceGuard/actions/runs/39135666649 on commit 44bb1755593b8f6e9cb953aa1b51350252eadab0 was still in progress when recorded; verify final status/artifact before giving download link
+next=verify latest workflow build; if success provide VoiceGuard-Test-win-x64; user test nav page/config persistence, live dictation, Escape cancel passthrough, double-tap clear/close, and existing PTT/filter/delay/soundboard
