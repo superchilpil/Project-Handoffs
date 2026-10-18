@@ -231,3 +231,10 @@ Read before asking user to explain. Combine with current repo/source and recent 
 - Windows build/runtime behavior not yet tested; verify Games tab list/refresh/add and confirm unconfigured borderless games still do not trigger.
 - CI toolchain updated from Go 1.25 to Go 1.26 in build.yml, quick-checks.yml, release.yml, windows-build.yml because Wails v3.0.0-beta.32 requires Go >=1.26.
 
+[GAME_MODE_VANISH_Z_ORDER_FIX]
+2026-10-18:
+- Fixed exitFullscreenGameMode in ghost-chat/fullscreen_game.go: restore position and previous vanish state first, then set Win32 topmost to match that state.
+- Before fix, exiting configured game mode always set HWND_NOTOPMOST, even when the pre-game state was vanished overlay; this caused the restored chat to fall behind browser/other windows.
+- Commit=5fb22ce6a7d057b6b5c97fb3ab316e51c262427e
+- Not yet Windows build/runtime tested. Verify: begin with chat vanished on primary monitor, launch configured game, confirm chat moves to monitor 2, close game, confirm it returns vanished and remains above browser windows; also verify a non-vanished pre-game state restores non-topmost.
+
