@@ -41,7 +41,8 @@ interval=5s/10s/15s/30s/1m/2m/5m; runtime clamp 5..300; historical/default≈15s
 per_platform=AutoConnect
 live=>auto connect; autoOwned=true; emit auto-connected; optional auto-show/focus+vanish
 fullscreen_game_mode=General.FullscreenGameMode (default off); Windows foreground fullscreen-sized window detection every 500ms; if active, show opaque/non-vanished chat on first non-primary monitor; restore previous window position+vanish state when detection ends
-fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; no-activate Win32 show keeps game focus; Windows cannot universally distinguish exclusive from borderless fullscreen, so detector matches foreground window bounds to monitor bounds
+fullscreen_position=General.FullscreenChatX/Y are offsets from secondary monitor work area; dragging chat during game mode debounces config save; no-activate Win32 show keeps game focus; vanish hotkey is ignored during game mode; when Ghost Chat has focus for position adjustment, tracked game process lifetime prevents premature restore
+fullscreen_detection=Windows foreground window bounds match monitor bounds; Windows cannot universally distinguish exclusive from borderless fullscreen; exits on leaving fullscreen unless Ghost Chat itself has focus, then waits for tracked game process to exit
 fullscreen_files=fullscreen_game.go; fullscreen_detect_windows.go; fullscreen_detect_other.go; setting in GeneralSettings.tsx
 not_live=>disconnect ONLY autoOwned; emit auto-disconnected; optional hide tray
 manual connections=never disrupt
