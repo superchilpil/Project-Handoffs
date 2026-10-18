@@ -182,3 +182,14 @@ ui=added dedicated Speech to Text left-nav page in MainForm.cs, with dark/purple
 escape_behavior=VoiceToTextForm.cs Escape global hook calls CancelSession(false,false); this stops/cancels current recognition generation and resets local session state without sending backspaces or injecting Escape; physical Escape passes through to game; double-tap remains clear typed text plus send Escape
 build=workflow run https://github.com/superchilpil/VoiceGuard/actions/runs/39135666649 on commit 44bb1755593b8f6e9cb953aa1b51350252eadab0 was still in progress when recorded; verify final status/artifact before giving download link
 next=verify latest workflow build; if success provide VoiceGuard-Test-win-x64; user test nav page/config persistence, live dictation, Escape cancel passthrough, double-tap clear/close, and existing PTT/filter/delay/soundboard
+
+[SESSION_UPDATE_2026-10-18_HOTKEY_AND_NAV_REVISION]
+active_work_branch=feature/voice-to-text-test
+latest_commit=ce307445a0207f57b13931320c836ba3bd19409f
+navigation=Speech to Text moved directly above Settings; Settings is pinned to the bottom of the sidebar; page visibility and column mapping updated to match the new order
+dictation_ui=removed the Open Live Dictation Window button; intended workflow is live transcription typed directly into the foreground game chat with no visible secondary window
+hotkey_fix=MainForm now creates a hidden VoiceToTextForm controller and starts global activation/Escape hooks during app load after persisted key settings are loaded; key changes rebuild hooks immediately; controller hooks are disposed on real app exit
+safety_fix=reject VoiceGuard main window as a dictation target; verify capture can start before injecting the game's chat-open key, avoiding stray Enter/Escape when VoiceGuard engine or Whisper is not ready; physical Escape still cancels without backspacing or injecting Escape; double-tap cancellation still clears VoiceGuard-entered text and closes chat
+validation=source changes pushed to feature branch; check latest GitHub Actions build for commit ce307445a0207f57b13931320c836ba3bd19409f before sharing a new test artifact; earlier successful artifact predates these changes and must not be reused
+next=verify build; if it fails, inspect logs and fix only feature/voice-to-text-test; user should test hotkey with VoiceGuard started and game focused, live text, send/double-tap cancel/Escape, key persistence, nav order, and unchanged PTT/filter/delay/soundboard; no merge to main without explicit approval
+
