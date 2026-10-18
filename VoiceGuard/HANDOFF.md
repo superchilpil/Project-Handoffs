@@ -211,3 +211,9 @@ scope=only changed the SetMode call in MainForm.cs; no soundboard detection/play
 validation=source update pushed to feature/voice-to-text-test; build and runtime behavior still need verification via latest GitHub Actions artifact
 merge_policy=do not merge to main yet; user wants to test this alongside the other branch changes and only then merge the overlay change if successful, without bundling unrelated experimental changes
 next=verify latest workflow run/artifact for commit 864362c320a96a213b777a726ae5fec8b43f4e85; test Text overlay shows actual matched phrase plus ♪ during playback, returns to LIVE when playback ends/cancels, and LED style remains purple; then prepare an isolated overlay-only merge/cherry-pick if approved
+
+[SESSION_UPDATE_2026-10-18_SOUNDBOARD_OVERLAY_FIT]
+active_work_branch=feature/voice-to-text-test
+latest_source_commit=0421079682b75045d4bbfbed5127fe5c643d4cd4
+refinement=ModeOverlayForm.cs dynamically widens the Text overlay for longer soundboard phrases (capped at 700px) and repositions it, preventing typical phrase labels from being clipped; LED sizing/color behavior remains unchanged
+workflow=Windows installer workflow is manual-only (workflow_dispatch); no build has been run for this commit yet; user should manually run the workflow from the feature branch Actions tab and use that run's artifact
