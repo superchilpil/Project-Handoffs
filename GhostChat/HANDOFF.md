@@ -221,3 +221,13 @@ current user decisions override stale historical goals
 
 [CONTINUITY]
 Read before asking user to explain. Combine with current repo/source and recent conversation. Historical != proof. Explicit negative requirements are binding until user reverses. Significant state change=>update corresponding project handoff. Full transcript may be unavailable; maximize recoverable context without inventing.
+
+[GAME_SETTINGS_RUNNING_PROCESS_PICKER]
+2026-10-18:
+- Settings > Games now loads unique currently running Windows executable names via the existing Toolhelp process snapshot helper.
+- Dropdown allows selecting a running process and adding it to configured game executables; refresh button updates the list. Existing manual entry remains as fallback.
+- Existing behavior remains explicit opt-in: only configured executable names trigger game placement; process focus/fullscreen state does not matter.
+- Added en-US/de-DE labels. Wails binding added for App.GetRunningExecutables (FNV-1a method ID 1987937543).
+- Windows build/runtime behavior not yet tested; verify Games tab list/refresh/add and confirm unconfigured borderless games still do not trigger.
+- CI toolchain updated from Go 1.25 to Go 1.26 in build.yml, quick-checks.yml, release.yml, windows-build.yml because Wails v3.0.0-beta.32 requires Go >=1.26.
+
