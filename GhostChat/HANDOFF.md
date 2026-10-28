@@ -244,3 +244,17 @@ Read before asking user to explain. Combine with current repo/source and recent 
 - Fixed app.go ExpandForSettings/ShrinkToChat to preserve the chat window's original right edge: capture original X/width, expand to 1000px while shifting the window left by the added width, then restore original X when shrinking.
 - Commit in ghost-chat main: da975806f556f60633112c4f818dcdcb2a2bdd00
 - Not yet Windows build/runtime tested. Verify Settings opens to the left while chat content remains at its prior screen coordinates, and closing Settings returns the window to its original bounds. Check repeated open/close and dragging/repositioning between cycles.
+
+[NEW_CHAT_ENTRY_ANIMATION]
+2026-10-28:
+- Added General settings for incoming-message animation: disabled by default, toggle, and direction dropdown (left/right/bottom). Direction selector disabled while feature is off.
+- Config persisted under general.chat_entry_animation_enabled and general.chat_entry_animation; default direction left.
+- Applies to standard messages, Super Chats, membership messages, and event notifications. CSS respects prefers-reduced-motion.
+- Main repo commits (sequential):
+  config b8d61f4337fe9ddfe77418ce291d32608a310d2a
+  bindings cdfc772365c834736cd9dec061a8446547bb82eb
+  settings 4072020df718a2685106649ad379996625e971f3
+  chat wiring f4dd681d1b211889493a73e4a0f7ce591a27cb1c
+  message components/styles 26ad4378dd97c75ec94dff9b0cc7bc1e5078c7b2, 7fbad1939091414649bf434104a97c5376d6d634, ddc81fa3d22d1135d1ea9488ddbd5bf7eb0c2057, 1cbf4c0492e80cb53e62f54e0ce648a61fc44033
+  locales d89537752dc288d211ffd8a76c9937ee8047ef02, 208856cc7f14712eaa72eb8160bb5c78a10f28c2
+- JSON locale files parsed successfully after changes; Windows/frontend build and runtime behavior not yet tested. Verify setting persistence, each direction, and that fade-removal behavior remains correct.
