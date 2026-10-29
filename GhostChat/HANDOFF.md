@@ -258,3 +258,10 @@ Read before asking user to explain. Combine with current repo/source and recent 
   message components/styles 26ad4378dd97c75ec94dff9b0cc7bc1e5078c7b2, 7fbad1939091414649bf434104a97c5376d6d634, ddc81fa3d22d1135d1ea9488ddbd5bf7eb0c2057, 1cbf4c0492e80cb53e62f54e0ce648a61fc44033
   locales d89537752dc288d211ffd8a76c9937ee8047ef02, 208856cc7f14712eaa72eb8160bb5c78a10f28c2
 - JSON locale files parsed successfully after changes; Windows/frontend build and runtime behavior not yet tested. Verify setting persistence, each direction, and that fade-removal behavior remains correct.
+
+[CHAT_ENTRY_ANIMATION_BUILD_FIX]
+2026-10-28:
+- User's Wails build exposed TS1005 in EventMessage.tsx line 73; fixed missing JSX expression closing brace in commit b252fbb00aef958dc637ec2180d5261a87673f62.
+- Set General.ChatEntryAnimation default to left in config defaults: aeba3bfc50ea0b2579d60e7bea608923abfbb0eb.
+- Corrected CSS cascade so entry animations do not suppress existing fade-out/removal animation: 151be26ad4f2ad352c380b6325cc96fc621997df and a17c9da7f01c33db9228d0c406b2994e72c69073.
+- Ask user to rerun task build; frontend build was not executed locally here.
