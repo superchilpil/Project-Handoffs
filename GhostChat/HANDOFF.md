@@ -265,3 +265,9 @@ Read before asking user to explain. Combine with current repo/source and recent 
 - Set General.ChatEntryAnimation default to left in config defaults: aeba3bfc50ea0b2579d60e7bea608923abfbb0eb.
 - Corrected CSS cascade so entry animations do not suppress existing fade-out/removal animation: 151be26ad4f2ad352c380b6325cc96fc621997df and a17c9da7f01c33db9228d0c406b2994e72c69073.
 - Ask user to rerun task build; frontend build was not executed locally here.
+
+[CHAT_ENTRY_ANIMATION_INTENSITY]
+2026-10-28:
+- Increased entry animation travel distance and duration (620ms), added overshoot/settle easing, subtle scale and brightness pop for left/right/bottom directions, for regular and event messages.
+- Commits: ChatMessage CSS d832eadf39bdd80a5ee0f55406a7311123c6885f then stylesheet cleanup f46d460c7b3601cbd5dcb3fe51fdc6235c8ed2e4; EventMessage CSS 3960717540dc4b6b428c603a39af35a4d2e2bc2b then cleanup 59c686205c791c502605509b33c217e1b218d655.
+- Not yet build/runtime tested; user should rerun task build.
