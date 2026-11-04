@@ -271,3 +271,13 @@ Read before asking user to explain. Combine with current repo/source and recent 
 - Increased entry animation travel distance and duration (620ms), added overshoot/settle easing, subtle scale and brightness pop for left/right/bottom directions, for regular and event messages.
 - Commits: ChatMessage CSS d832eadf39bdd80a5ee0f55406a7311123c6885f then stylesheet cleanup f46d460c7b3601cbd5dcb3fe51fdc6235c8ed2e4; EventMessage CSS 3960717540dc4b6b428c603a39af35a4d2e2bc2b then cleanup 59c686205c791c502605509b33c217e1b218d655.
 - Not yet build/runtime tested; user should rerun task build.
+
+[SECURITY_INCIDENT_REMOVE_EMBEDDED_YOUTUBE_SECRETS]
+2026-11-04:
+- Original maintainer reported that v1.3.1 ghost-chat.exe exposed YOUTUBE_API_KEY and YOUTUBE_API_BYPASS_PASSWORD through strings. Treat both values as compromised.
+- Removed both linker-injected values from Windows and macOS Taskfiles, root Taskfile build/package forwarding, and release workflow environment. `internal/buildconfig` now explicitly contains no credentials.
+- YouTube client no longer falls back to a compiled API key. API key can only come from the user's local config; otherwise StreamList/API calls are skipped and Innertube is used.
+- Removed client-side bypass password validation and UI. A password/hash embedded in a desktop client is never a secure owner-only bypass; a real private bypass requires server-side authentication. Removed bypass state fields from config.
+- Release notes updated to state no shared key ships. Commits: app 5b7d726cdb468ac86872b57908f4b84ce4c91895; YouTube client 4efded6ce2a8ec808b01a9a484cf3fc339d0f0db; buildconfig 63f288525c86abed033debe60c6c4e104105c28e; root Taskfile a8c3488ccf29d66acfd8827333371c537d7dc7af; Windows Taskfile 19c892a2388660fb2fc6f8d9c80e75757cbc82bd; macOS Taskfile f967ef17d81087a9b0966608a20fa4e42d80c965; release workflow ae173f9923ba13e77bef4403cc4c35d1084be7ac; YouTube UI f96849ad80507aa17443d5130cb9532d33e319dd; config ae76e03a96512d280f1a4a4f58f6bce8d91d9688.
+- Not yet built or tested. Immediate operator action still required: revoke old Google API key in Google Cloud Console, create a replacement only for private server use (not desktop builds), delete/rotate YOUTUBE_API_BYPASS_PASSWORD GitHub secret, and withdraw v1.3.1 portable/installer assets because they contain recoverable credentials. GitHub connector available here did not expose release-asset deletion or Actions secret management.
+- Follow-up architecture: if a shared API quota is required, proxy YouTube Data API calls through a backend service; keep API key and owner bypass entirely server-side. Do not put either in a desktop binary, even obfuscated or hashed.
