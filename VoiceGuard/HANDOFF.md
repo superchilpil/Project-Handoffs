@@ -235,3 +235,13 @@ hotkey_diagnosis=VoiceToTextForm used two WH_KEYBOARD_LL PttKeyHook instances; h
 hotkey_change=replaced experimental STT activation/Escape low-level hooks with a dedicated background GetAsyncKeyState rising-edge poll (8ms interval); activation and Escape keys are not consumed; Escape cancellation remains pass-through; existing main PTT PttKeyHook untouched
 validation=feature/** triggers build-validation on push; await Actions result for 8264c47fe3ba9a5e091ec5613420b691e4e4a7bf before sharing test artifact; no STT changes merged to main
 next=1) user can run installer build on main to test overlay phrase and width; 2) check feature branch automatic build for hotkey fix and provide artifact after successful validation; runtime-test hotkey with VoiceGuard/model started and game foreground, then test live text, send/cancel, Escape pass-through, and existing PTT/filter/soundboard
+
+
+[SESSION_UPDATE_2026-11-04_DIRECT_PTT_BYPASS_RAW_AUDIO]
+active_work_branch=test
+base_commit=2b1a262e10005389f38092541632fc2320a27a77
+commits=9fb7a48e1c284268eef9c5d56204b48fb6205acb (AudioEngine direct bypass flag + skip output gain); 78042d16b9738db53f52a456af57b5878ac19bec (MainForm toggles flag on physical Z PTT); 5b29532f26b43f4d870c474b2a9b49f64bc685e9 (reset bypass state on engine stop)
+diagnosis=SwitchProvider live passthrough applied master output volume even during direct PTT bypass; above 100% it uses tanh nonlinear limiting, which can color/distort mic. User reports issue only while holding bypass PTT.
+change=direct Z PTT bypass now skips ApplyOutputVolume entirely while held; microphone PCM passes through the live buffer unmodified. Normal live passthrough outside bypass, filtered PTT, censor/replacement/soundboard volume, delay, and output volume control remain unchanged. Bypass flag resets on key-up via hook and on engine stop.
+validation=source changes committed to test branch; build-validation workflow is configured to run on test push; commit status was pending with no checks visible at handoff update. Do not claim build success until verified.
+next=verify GitHub Actions build-validation run for 5b29532f26b43f4d870c474b2a9b49f64bc685e9; if successful share that run's VoiceGuard-Test-Build-win-x64 artifact; user runtime-test direct Z PTT audio for clean/uncolored sound and confirm filtered VoiceGuard Trigger, soundboard, and ordinary idle passthrough remain unchanged. No main merge/release without explicit approval.
