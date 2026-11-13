@@ -247,3 +247,18 @@ This handoff records goals/decisions and observed source state, not a verified r
 - Additional review: current RequestAsync reads directly from shared ClientWebSocket and discards unsolicited OBS events while waiting for a matching response. A single receive loop + pending request correlation + event dispatch is required before production event subscriptions. Current _gate serializes polling/control requests but does not by itself solve event-frame consumption.
 - Latest inspected Program.cs SHA=b9d602e768ad2c4b84a1b9f3b4e7ca22cf75ac99; Android MainActivity.kt SHA=84f1cb8d6a5c18ad24a5ce42e46c4df264e19154.
 - These are source inspections only; no build or runtime verification performed.
+
+
+[IMPLEMENTATION_UPDATE_2026-11-13_LATEST]
+SOURCE_REPO_HEAD=15a224ba6eb4019e841e5dabe9593c4b367661c3
+- Replaced Windows/Companion/ObsWebSocketClient.cs. New content SHA=0263cbba6d101b7305f6239f0dee508162c44a4a.
+- Fixed malformed literal \\n sequences in status polling source.
+- Replaced competing ReceiveAsync calls with a single ReceiveLoopAsync. Handshake reads Hello/Identified before starting the loop; after identify the receive loop is the only socket reader.
+- Added ConcurrentDictionary requestId -> TaskCompletionSource response correlation. Requests may be concurrent; SendAsync is serialized with _sendGate; response frames are routed by requestId.
+- Added OBS event dispatch for StreamStateChanged (outputActive/outputReconnecting).
+- PollStatusAsync continues GetStreamStatus every 2 seconds and updates duration/status. Start/stop calls use same correlated request mechanism.
+- Added 10-second request timeout, 1MB message guard, text-frame validation, pending-request failure when connection ends, and connection-task coordinated shutdown/reconnect.
+- Latest follow-up commit 15a224ba6eb4019e841e5dabe9593c4b367661c3 ensures receive and poll tasks are cancelled/awaited together if either task ends/fails.
+- Windows build workflow should be triggered by these pushes because Windows/** changed, but CI result has NOT been retrieved/verified. No local dotnet SDK available in current execution environment. Do not claim compilation success.
+- Previous [NEW_SOURCE_REVIEW_2026-11-13] note describes the pre-fix source state; it is superseded by this section.
+- Remaining P0: obtain actual GitHub Actions Windows build result; fix any compiler errors. Then protocol/runtime test against OBS v5 on streaming PC. Current implementation still not runtime-verified; no YouTube, Android networking, pairing, TLS, or chat features implemented.
