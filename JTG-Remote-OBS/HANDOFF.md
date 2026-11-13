@@ -239,3 +239,11 @@ P4 polish:
 
 [CONTINUITY_RULE]
 This handoff records goals/decisions and observed source state, not a verified release. Current user decisions override any stale future additions. Inspect repo before implementation; preserve NDI/GhostChat and phone-first direction. Significant changes should update this handoff. Never infer build success from workflow file or commit.
+
+
+[NEW_SOURCE_REVIEW_2026-11-13]
+- Latest inspected Windows/Companion/ObsWebSocketClient.cs SHA=4575b79c53cd7db24cd6a2d6dd9c37a4796b7e9e.
+- IMPORTANT: RunAsync status-polling block contains literal backslash-n character sequences in source immediately after 'JsonObject? result;' (the source line reads as escaped \\n text, not actual line breaks). This is a likely C# compile error and must be corrected before build.
+- Additional review: current RequestAsync reads directly from shared ClientWebSocket and discards unsolicited OBS events while waiting for a matching response. A single receive loop + pending request correlation + event dispatch is required before production event subscriptions. Current _gate serializes polling/control requests but does not by itself solve event-frame consumption.
+- Latest inspected Program.cs SHA=b9d602e768ad2c4b84a1b9f3b4e7ca22cf75ac99; Android MainActivity.kt SHA=84f1cb8d6a5c18ad24a5ce42e46c4df264e19154.
+- These are source inspections only; no build or runtime verification performed.
